@@ -51,34 +51,8 @@
             <div id="totalBattlePower">
                 总附魔战力: <span id="totalPower">0</span>
             </div>
-
             <!-- 武器信息 -->
-            <div id="weapon_list" class="weapon-list">
-                <div id="weapon-item-A" class="weapon-item" onclick="switchWeapon(event)">
-                    <img id="weaponA_PNG" class="weaponPNG" alt="武器A">
-                    <div id="weaponA-status" class="stats"> <span id="weaponA-power"></span></div>
-                </div>
-                <div id="weapon-item-B" class="weapon-item" onclick="switchWeapon(event)">
-                    <img id="weaponB_PNG" class="weaponPNG" alt="武器B">
-                    <div id="weaponB-status" class="stats"><span id="weaponB-power"></span></div>
-                </div>
-                <div id="weapon-item-C" class="weapon-item" onclick="switchWeapon(event)">
-                    <img id="weaponC_PNG" class="weaponPNG" alt="武器C">
-                    <div id="weaponC-status" class="stats"><span id="weaponC-power"></span></div>
-                </div>
-                <div id="weapon-item-D" class="weapon-item" onclick="switchWeapon(event)">
-                    <img id="weaponD_PNG" class="weaponPNG" alt="武器D">
-                    <div id="weaponD-status" class="stats"><span id="weaponD-power"></span></div>
-                </div>
-                <div id="weapon-item-E" class="weapon-item" onclick="switchWeapon(event)">
-                    <img id="weaponE_PNG" class="weaponPNG" alt="武器E">
-                    <div id="weaponE-status" class="stats"><span id="weaponE-power"></span></div>
-                </div>
-                <div id="weapon-item-F" class="weapon-item" onclick="switchWeapon(event)">
-                    <img id="weaponF_PNG" class="weaponPNG" alt="武器F">
-                    <div id="weaponF-status" class="stats"><span id="weaponF-power"></span></div>
-                </div>
-            </div>
+            <div id="weapon_list" class="weapon-list"></div>
         </div>
 
         <!-- 词条详情 -->
@@ -184,6 +158,7 @@
     const colorGemCost_element = document.getElementById('colorGemCost');
     const totalPower_element = document.getElementById('totalPower');
     const attribute_list_element = document.getElementById('attribute-list');
+    const weapon_list_element = document.getElementById('weapon_list');
 
     // 页面加载完成时调用 adjustScale
     window.onload = function () {
@@ -191,10 +166,10 @@
     };
     // 页面加载完成后执行
     document.addEventListener('DOMContentLoaded', () => {
-        eo_init();
+        init_eo();
+        init_weapon_list();
         init_attributeList();
         eo_updateUI(enchantmentScheme);
-        init_PNG();
         disContextMenu();
         update_resource();
         updateShop_whiteStone();
@@ -224,7 +199,6 @@
         let Target_right_element = document.getElementById("leftBar");
         let Actual_top_element = document.getElementById('weapon-item-A');
         let Actual_left_element = document.getElementById('weapon-item-F');
-        let weapon_list_element = document.getElementById('weapon_list');
 
         let Target_bottom = Target_bottom_element.getBoundingClientRect().bottom.toFixed(0);
         let Target_right = Target_right_element.getBoundingClientRect().right.toFixed(0);
@@ -252,7 +226,6 @@
             }
         }
         scaleAdjustment();
-        // window.requestAnimationFrame(scaleAdjustment);
     }
 
     // 切换附魔方案
@@ -264,10 +237,8 @@
         let weapons = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme).weapon;
         currentWeapon = Object.keys(weapons)[0];
         // 取消上回的选中效果
-        let items = document.querySelectorAll('.weapon-item');
-        items.forEach(item => {
-            item.classList.remove('active');
-        });
+        clear_weaponUI_scale();
+        clear_weaponUI_aura();
         // 更新总战力
         update_totalPower(animation = false);
         // 更新附魔属性列表
@@ -286,26 +257,82 @@
         // 更新词条列表
         update_attributeList();
         // 选择当前武器的UI
-        if (event.button === 0) {
+        if (event.button === 2) {
+            // 移动放大效果
             let weaponItem = document.getElementById('weapon-item-' + currentWeapon);
             if (weaponItem.classList.contains('active')) {
                 weaponItem.classList.remove('active');
             } else {
-                let items = document.querySelectorAll('.weapon-item');
-                items.forEach(item => {
-                    item.classList.remove('active');
-                });
+                clear_weaponUI_scale();
                 weaponItem.classList.add('active');
             }
         }
+        // 光环效果
+        let divItem = document.getElementById(`img${currentWeapon}_div`);
+        if (divItem.classList.contains('Img_active')) {
+            divItem.classList.remove('Img_active');
+        } else {
+            clear_weaponUI_aura();
+            divItem.classList.add('Img_active');
+        }
+    }
+    function clear_weaponUI_scale() {
+        let items = document.querySelectorAll('.weapon-item');
+        items.forEach(item => {
+            item.classList.remove('active');
+        });
+    }
+    function clear_weaponUI_aura() {
+        let items = document.querySelectorAll('.img_div');
+        items.forEach(item => {
+            item.classList.remove('Img_active');
+        });
     }
 
-    function init_PNG() {
+    function init_weapon_list() {
+        weapon_list_element.innerHTML = '';
         let weapons = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme).weapon;
         for (let weaponKey in weapons) {
-            let imgData = `weapon${weaponKey}_PNG`
-            let img = document.getElementById(imgData);
-            img.src = weapon_PNG[imgData];
+
+            // 创建 weapon-item div
+            const weaponItem = document.createElement('div');
+            weaponItem.id = `weapon-item-${weaponKey}`;
+            weaponItem.classList.add('weapon-item');
+            weaponItem.setAttribute('onclick', 'switchWeapon(event)');
+
+            // 创建 img_div 包裹 div
+            const imgDiv = document.createElement('div');
+            imgDiv.id = `img${weaponKey}_div`;
+            imgDiv.classList.add('img_div');
+
+            // 创建 img 标签
+            const img = document.createElement('img');
+            img.id = `weapon${weaponKey}_PNG`;
+            img.src = weapon_PNG[img.id];
+            img.classList.add('weaponPNG');
+            img.alt = `武器${weaponKey}`;
+
+            // 将 img 添加到 img_div 中
+            imgDiv.appendChild(img);
+
+            // 创建 stats div
+            const statsDiv = document.createElement('div');
+            statsDiv.id = `weapon${weaponKey}-status`;
+            statsDiv.classList.add('stats');
+
+            // 创建 span 标签
+            const span = document.createElement('span');
+            span.id = `weapon${weaponKey}-power`;
+
+            // 将 span 添加到 stats div 中
+            statsDiv.appendChild(span);
+
+            // 将 imgDiv 和 statsDiv 添加到 weaponItem 中
+            weaponItem.appendChild(imgDiv);
+            weaponItem.appendChild(statsDiv);
+
+            // 将 weaponItem 添加到 weaponList 中
+            weapon_list_element.appendChild(weaponItem);
         }
     }
 
@@ -366,7 +393,7 @@
         return /iphone|ipod|android|windows phone|blackberry|bb10|iemobile|mobile/i.test(userAgent);
     }
 
-    function eo_init() {
+    function init_eo() {
         let buttonTxt = ""
         if (!isMobileDevice()) {
             buttonTxt = "方案 ";
@@ -549,7 +576,7 @@
         money_element.textContent = money;
     }
     // 白石
-    let whiteStone = 1000;
+    let whiteStone = 3000;
     function update_whiteStone() {
         whiteStone_element.textContent = whiteStone;
     }
@@ -561,12 +588,8 @@
     // 增加资源数量
     function increaseResource(Type, amount) {
         if (Type === 'money') {
-            if (money + amount < 0) {
-                showCustomDialog_NotEnough("点券不足，无法购买！");
-            } else {
-                money += amount;
-                update_money();
-            }
+            money += amount;
+            update_money();
         } else if (Type === 'whiteStone') {
             whiteStone += amount;
             update_whiteStone();
@@ -752,6 +775,7 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        -webkit-user-select: none;
     }
 
     body {
@@ -760,6 +784,7 @@
         padding: 0;
         box-sizing: border-box;
         background-color: #f4f4f9;
+        background: linear-gradient(-45deg, #ffefba, #ffffff);
     }
 
     /* 主容器 */
@@ -790,6 +815,7 @@
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(-45deg, #ffefba, #ffffff);
     }
 
     #enchantment-info {
@@ -832,7 +858,6 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        -webkit-user-select: none;
     }
 
     .attributes {
@@ -849,6 +874,7 @@
         background-color: #fff;
         border-radius: 5px;
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(-45deg, #ffefba, #ffffff);
     }
 
     .locked {
@@ -914,6 +940,27 @@
 
     /* 移动设备 */
     @media (max-height: 450px) {
+
+        #totalBattlePower {
+            font-size: smaller !important;
+        }
+        .add,
+        .subtract {
+            font-size: small !important;
+        }
+
+        .attribute {
+            font-size: smaller;
+        }
+
+        #attribute-list {
+            margin-bottom: 10px;
+        }
+
+        .custom-dialog-content {
+            transform: scale(0.8);
+        }
+
         .add-button {
             padding: 3px 6px;
             font-size: 10px;
@@ -956,6 +1003,7 @@
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(-45deg, #ffefba, #ffffff);
     }
 
     .left-bar .section-title {
@@ -999,6 +1047,10 @@
         font-weight: bold;
         transition: transform 0.5s ease-out;
         z-index: 10;
+    }
+    .add, 
+    .subtract {
+        font-size: 24px;
     }
 
     .add {
@@ -1064,11 +1116,45 @@
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         cursor: pointer;
         transition: transform 0.3s;
-        -webkit-user-select: none;
     }
 
     .weapon-item.active {
         transform: scale(1.2) !important;
+    }
+
+    .img_div {
+        position: relative;
+        margin: auto;
+    }
+
+    .Img_active {
+        --colorA: #b78eff;
+
+        &::before,
+        &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            border-radius: 50%;
+            border-top: 2px solid #fff;
+            filter:
+                drop-shadow(0 0 2px var(--colorA)) drop-shadow(0 0 5px var(--colorA)) drop-shadow(0 0 10px var(--colorA)) drop-shadow(0 0 20px var(--colorA));
+            animation: rotate 3s infinite linear;
+        }
+
+        &::after {
+            --colorA: #ffec41;
+            animation-delay: -1.5s;
+        }
+    }
+
+    @keyframes rotate {
+        100% {
+            transform: rotate(360deg);
+        }
     }
 
     .weaponPNG {
@@ -1079,6 +1165,7 @@
         object-fit: cover;
     }
 
+
     .weapon-item .stats {
         margin-top: 10px;
         font-size: 14px;
@@ -1087,30 +1174,34 @@
         transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
     }
 
-
-
     /* 武器按六边形分布 */
     .weapon-item:nth-child(1) {
+        background: linear-gradient(135deg, #ea5455, #feb692);
         transform: rotate(0deg) translate(0, -180px) rotate(0deg);
     }
 
     .weapon-item:nth-child(2) {
+        background: linear-gradient(135deg, #f09819, #edde5d);
         transform: rotate(60deg) translate(0, -180px) rotate(-60deg);
     }
 
     .weapon-item:nth-child(3) {
+        background: linear-gradient(135deg, #ffec3d, #fff799);
         transform: rotate(120deg) translate(0, -180px) rotate(-120deg);
     }
 
     .weapon-item:nth-child(4) {
+        background: linear-gradient(135deg, #49c628, #70f570);
         transform: rotate(180deg) translate(0, -180px) rotate(-180deg);
     }
 
     .weapon-item:nth-child(5) {
+        background: linear-gradient(135deg, #3c8ce7, #00eaff);
         transform: rotate(240deg) translate(0, -180px) rotate(-240deg);
     }
 
     .weapon-item:nth-child(6) {
+        background: linear-gradient(135deg, #7367f0, #ce9ffc);
         transform: rotate(300deg) translate(0, -180px) rotate(-300deg);
     }
 </style>
@@ -1142,7 +1233,6 @@
     #refreshCost {
         font-size: 14px;
         color: #555;
-        -webkit-user-select: none;
     }
 
     #refreshCost span {
@@ -1154,7 +1244,6 @@
 <style>
     .lock-status {
         cursor: pointer;
-        -webkit-user-select: none;
     }
 
     /* 放大效果 */
@@ -1188,21 +1277,15 @@
     }
 
     @keyframes blinkBackground {
-        0% {
+        /* 0% {
             background-color: #f0f0f0;
         }
-
-        /* 初始颜色 */
         50% {
             background-color: #dcdcdc;
         }
-
-        /* 闪烁时的颜色 */
         100% {
             background-color: #f0f0f0;
-        }
-
-        /* 恢复原始颜色 */
+        }  */
     }
 </style>
 
@@ -1275,17 +1358,17 @@
 
     /* 关闭按钮 */
     .closeShop-btn {
-        background-color: #1890ff;
+        background: linear-gradient(135deg, #2afadf, #4c83ff);
         font-size: 18px;
         padding: 10px 20px;
         border-radius: 8px;
         cursor: pointer;
         border: none;
-        transition: all 0.3s ease;
+        transition: background-color 0.3s ease, transform 0.3s ease;
     }
 
     .closeShop-btn:hover {
-        background-color: #a0d911;
+        background: linear-gradient(135deg, #fff720, #2afadf);
         transform: translateY(-2px);
     }
 
@@ -1344,13 +1427,17 @@
         for (let i = 0; i < total; i++) {
             let button = document.createElement('button');
             button.onclick = function () {
-                increaseResource('money', -purchase_money_costMoney[i]);
-                increaseResource('money', purchase_money[i]);
+                if (money >= purchase_money_costMoney[i]) {
+                    increaseResource('money', -purchase_money_costMoney[i]);
+                    increaseResource('money', purchase_money[i]);
+                }
+                else {
+                    showCustomDialog_NotEnough("点券不足，无法购买！");
+                }
             }
             button.innerHTML = `${purchase_money[i]} 点券 <br> (￥${purchase_money_costMoney[i]})`;
             bottonContainer.appendChild(button);
         }
-
     }
     // 白石购买界面
     let purchase_WhiteStone = [100, 300, 500, 1000, 3000, 5000, 10000, 30000, 50000];
@@ -1363,13 +1450,16 @@
         for (let i = 0; i < total; i++) {
             let button = document.createElement('button');
             button.onclick = function () {
-                increaseResource('money', -purchase_WhiteStone_costMoney[i]);
-                increaseResource('whiteStone', purchase_WhiteStone[i]);
+                if (money >= purchase_WhiteStone_costMoney[i]) {
+                    increaseResource('money', -purchase_WhiteStone_costMoney[i]);
+                    increaseResource('whiteStone', purchase_WhiteStone[i]);
+                } else {
+                    showCustomDialog_NotEnough("点券不足，无法购买！");
+                }
             }
             button.innerHTML = `${purchase_WhiteStone[i]} 白石 <br> (￥${purchase_WhiteStone_costMoney[i]})`;
             bottonContainer.appendChild(button);
         }
-
     }
     // 彩玉购买界面
     let purchase_ColorGem = [1, 3, 5, 10, 30, 50, 100, 300, 500];
@@ -1382,8 +1472,13 @@
         for (let i = 0; i < total; i++) {
             let button = document.createElement('button');
             button.onclick = function () {
-                increaseResource('money', -purchase_ColorGem_costMoney[i]);
-                increaseResource('colorGem', purchase_ColorGem[i]);
+                if (money >= purchase_ColorGem_costMoney[i]) {
+                    increaseResource('money', -purchase_ColorGem_costMoney[i]);
+                    increaseResource('colorGem', purchase_ColorGem[i]);
+                } else {
+                    showCustomDialog_NotEnough("点券不足，无法购买！");
+                }
+
             }
             button.innerHTML = `${purchase_ColorGem[i]} 彩玉 <br> (￥${purchase_ColorGem_costMoney[i]})`;
             bottonContainer.appendChild(button);
@@ -1412,6 +1507,16 @@
         vertical-align: middle;
     }
 
+    .custom-dialog-content .h2_NotEnough {
+        text-align: left;
+        color: red;
+    }
+
+    .custom-dialog-content .h2_unlock {
+        text-align: left;
+        color: blue;
+    }
+
     /* 对话框的背景遮罩 */
     .custom-dialog {
         display: none;
@@ -1422,21 +1527,18 @@
         width: 100%;
         height: 100%;
         background: rgba(0, 0, 0, 0.5);
-        /* 半透明的黑色背景 */
         justify-content: center;
         align-items: center;
         z-index: 200;
-        /* 使其位于页面最上层 */
     }
 
     /* 对话框内容 */
     .custom-dialog-content {
-        background: white;
+        background: linear-gradient(135deg, #fce38a, #f38181);
         padding: 20px;
         border-radius: 8px;
         text-align: center;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        -webkit-user-select: none;
     }
 
     .button {
@@ -1453,21 +1555,30 @@
         margin: 10px;
         padding: 10px 20px;
         font-size: 16px;
+        font-weight: bold;
         cursor: pointer;
         border: none;
         border-radius: 5px;
     }
 
+    .p_container {
+        font-weight: bold;
+        background: linear-gradient(135deg, #ffeeee, #ddefbb);
+        padding: 15px 30px;
+        border-radius: 12px;
+        text-align: center;
+    }
+
     /* 确认按钮 */
     .confirmButton {
-        background-color: #4CAF50;
-        color: white;
+        background: linear-gradient(135deg, #81fbb8, #28c76f);
+        color: black;
     }
 
     /* 取消按钮 */
     .cancelButton {
-        background-color: #f44336;
-        color: white;
+        background: linear-gradient(135deg, #fe8c00, #f83600);
+        color: black;
     }
 
     .confirmButton:hover,
@@ -1479,7 +1590,7 @@
 <!-- 资源不足 -->
 <div id="customDialog_NotEnough" class="custom-dialog">
     <div class="custom-dialog-content">
-        <h2 style="text-align: left;color: red;">
+        <h2 class="h2_NotEnough">
             <svg t="1733540037388" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
                 p-id="4530">
                 <path
@@ -1488,14 +1599,17 @@
             </svg>
             错误！
         </h2><br>
-        <p id="p_NotEnough"></p><br>
-        <button id="confirmButton_NotEnough" class="confirmButton">确认</button>
+        <div id="p_NotEnough_container" class="p_container"><br>
+            <p id="p_NotEnough"></p><br><br>
+            <button id="confirmButton_NotEnough" class="confirmButton">确认</button>
+        </div>
+
     </div>
 </div>
 <!-- 珍贵属性未锁定 -->
 <div id="customDialog_unlock" class="custom-dialog">
     <div class="custom-dialog-content">
-        <h2 style="text-align: left;color: blue;">
+        <h2 class="h2_unlock">
             <svg t="1733489872556" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
                 p-id="4285">
                 <path
@@ -1504,9 +1618,12 @@
             </svg>
             提示！
         </h2><br>
-        <p id="p_unlock">珍贵属性未锁定，是否选择继续刷新？</p><br>
-        <button id="confirmButton_unlock" class="confirmButton">确认</button>
-        <button id="cancelButton_unlock" class="cancelButton">取消</button>
+        <div id="p_NotEnough_container" class="p_container"><br>
+            <p id="p_unlock">珍贵属性未锁定，是否选择继续刷新？</p><br><br>
+            <button id="confirmButton_unlock" class="confirmButton">确认</button>
+            <button id="cancelButton_unlock" class="cancelButton">取消</button>
+        </div>
+
     </div>
 </div>
 
