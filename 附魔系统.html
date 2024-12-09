@@ -76,81 +76,62 @@
 </html>
 
 <script>
-    // 附魔方案数据
+    // 基本数据
+    let enchantments = [];
     let entryArray = [1, 2, 3, 4, 5];
-    let enchantments = [
-        {
-            enchantmentIndex: 1, totalPower: 0, weapon: {
-                'A': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'B': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'C': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'D': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'E': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'F': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-            }
-        },
-        {
-            enchantmentIndex: 2, totalPower: 0, weapon: {
-                'A': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'B': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'C': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'D': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'E': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'F': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-            }
-        },
-        {
-            enchantmentIndex: 3, totalPower: 0, weapon: {
-                'A': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'B': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'C': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'D': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'E': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'F': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-            }
-        },
-        {
-            enchantmentIndex: 4, totalPower: 0, weapon: {
-                'A': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'B': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'C': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'D': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'E': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'F': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-            }
-        },
-        {
-            enchantmentIndex: 5, totalPower: 0, weapon: {
-                'A': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'B': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'C': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'D': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'E': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-                'F': { 1: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 2: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 3: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 4: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, 5: { attributeName: "？？？？？", entryValue: 0, entryPower: 0, entryPercent: 0, entryColor: '#262626', lock: 0 }, },
-            }
-        },
-    ];
-    let attributeRankContent = {
-        1: { index: 1, rarity: 2, color: '#f5222d', icon: '🟥' },//红色
-        2: { index: 2, rarity: 6, color: '#fa8c16', icon: '🟧' },//橙色
-        3: { index: 3, rarity: 12, color: '#9254de', icon: '🟪' },//紫色
-        4: { index: 4, rarity: 55, color: '#1890ff', icon: '🟦' },//蓝色
-        5: { index: 5, rarity: 100, color: '#52c41a', icon: '🟩' },//绿色
-        6: { index: 6, rarity: 325, color: '#262626', icon: '⬜' },//黑色
-    }
-    let entriesContent = {
-        1: { name: "生命上限", rarity: 8, power: 0.25, max: 8000, },
-        2: { name: "生命恢复", rarity: 8, power: 1.5, max: 400, },
-        3: { name: "魔法上限", rarity: 8, power: 0.3, max: 2500, },
-        4: { name: "魔法恢复", rarity: 8, power: 10, max: 200, },
-        5: { name: "攻击", rarity: 8, power: 3.75, max: 750, },
-        6: { name: "物防", rarity: 8, power: 2.25, max: 250, },
-        7: { name: "法强", rarity: 8, power: 2.25, max: 500, },
-        8: { name: "法防", rarity: 8, power: 2, max: 300, },
-        9: { name: "物穿", rarity: 8, power: 2.5, max: 200, },
-        10: { name: "法穿", rarity: 8, power: 2.5, max: 100, },
-    };
+    let schemeArray = [1, 2, 3, 4, 5];
+    let weaponArray = ['A', 'B', 'C', 'D', 'E', 'F'];
 
+    let attributeRankContent = [
+        { index: 1, rarity: 2, color: '#f5222d', icon: '🟥' },//红色
+        { index: 2, rarity: 6, color: '#fa8c16', icon: '🟧' },//橙色
+        { index: 3, rarity: 12, color: '#9254de', icon: '🟪' },//紫色
+        { index: 4, rarity: 55, color: '#1890ff', icon: '🟦' },//蓝色
+        { index: 5, rarity: 100, color: '#52c41a', icon: '🟩' },//绿色
+        { index: 6, rarity: 325, color: '#262626', icon: '⬜' },//黑色
+    ];
+    let entriesContent = [
+        { index: 1, name: "生命上限", rarity: 8, power: 0.25, max: 8000, },
+        { index: 2, name: "生命恢复", rarity: 8, power: 1.5, max: 400, },
+        { index: 3, name: "魔法上限", rarity: 8, power: 0.3, max: 2500, },
+        { index: 4, name: "魔法恢复", rarity: 8, power: 10, max: 200, },
+        { index: 5, name: "攻击", rarity: 8, power: 3.75, max: 750, },
+        { index: 6, name: "物防", rarity: 8, power: 2.25, max: 250, },
+        { index: 7, name: "法强", rarity: 8, power: 2.25, max: 500, },
+        { index: 8, name: "法防", rarity: 8, power: 2, max: 300, },
+        { index: 9, name: "物穿", rarity: 8, power: 2.5, max: 200, },
+        { index: 10, name: "法穿", rarity: 8, power: 2.5, max: 100, },
+    ];
+
+    function init_enchantments() {
+        // 遍历每个附魔方案
+        schemeArray.forEach(schemeIndex => {
+            let scheme = {
+                enchantmentIndex: schemeIndex,
+                totalPower: 0,
+                weapon: {}
+            };
+            // 遍历每个武器
+            weaponArray.forEach(weaponType => {
+                let weapon = {};
+                // 为每个武器的每个附魔槽赋予初始值
+                entryArray.forEach(entryIndex => {
+                    weapon[entryIndex] = {
+                        attributeName: "？？？？？",  // 词条名称
+                        entryValue: 0,               // 属性属性初始值
+                        entryPower: 0,               // 附魔战力初始值
+                        entryPercent: 0,             // 属性百分比
+                        entryColor: '#262626',       // 词条默认颜色
+                        lock: 0                      // 初始词条不锁定
+                    };
+                });
+                scheme.weapon[weaponType] = weapon;
+            });
+            enchantments.push(scheme);
+        });
+    }
+
+    // 基本元素
     const money_element = document.getElementById('money');
     const whiteStone_element = document.getElementById('whiteStone');
     const whiteStoneCost_element = document.getElementById('whiteStoneCost');
@@ -160,16 +141,18 @@
     const attribute_list_element = document.getElementById('attribute-list');
     const weapon_list_element = document.getElementById('weapon_list');
 
+    // 初始化事件
     // 页面加载完成时调用 adjustScale
     window.onload = function () {
         adjustScale();
     };
     // 页面加载完成后执行
     document.addEventListener('DOMContentLoaded', () => {
+        init_enchantments();
         init_eo();
         init_weapon_list();
         init_attributeList();
-        eo_updateUI(enchantmentScheme);
+        eo_updateUI(enchantmentScheme_Current);
         disContextMenu();
         update_resource();
         updateShop_whiteStone();
@@ -229,13 +212,13 @@
     }
 
     // 切换附魔方案
-    let enchantmentScheme = 1;
+    let enchantmentScheme_Current = 1;
     function switchEnchant(schemeNumber) {
         // 选择当前附魔方案
-        enchantmentScheme = schemeNumber;
+        enchantmentScheme_Current = schemeNumber;
         // 默认选择第一件武器
-        let weapons = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme).weapon;
-        currentWeapon = Object.keys(weapons)[0];
+        let weapons = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon;
+        currentWeapon = weaponArray[0];
         // 取消上回的选中效果
         clear_weaponUI_scale();
         clear_weaponUI_aura();
@@ -291,38 +274,37 @@
 
     function init_weapon_list() {
         weapon_list_element.innerHTML = '';
-        let weapons = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme).weapon;
-        for (let weaponKey in weapons) {
-
+        let weapons = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon;
+        weaponArray.forEach(weapon => {
             // 创建 weapon-item div
             const weaponItem = document.createElement('div');
-            weaponItem.id = `weapon-item-${weaponKey}`;
+            weaponItem.id = `weapon-item-${weapon}`;
             weaponItem.classList.add('weapon-item');
             weaponItem.setAttribute('onclick', 'switchWeapon(event)');
 
             // 创建 img_div 包裹 div
             const imgDiv = document.createElement('div');
-            imgDiv.id = `img${weaponKey}_div`;
+            imgDiv.id = `img${weapon}_div`;
             imgDiv.classList.add('img_div');
 
             // 创建 img 标签
             const img = document.createElement('img');
-            img.id = `weapon${weaponKey}_PNG`;
+            img.id = `weapon${weapon}_PNG`;
             img.src = weapon_PNG[img.id];
             img.classList.add('weaponPNG');
-            img.alt = `武器${weaponKey}`;
+            img.alt = `武器${weapon}`;
 
             // 将 img 添加到 img_div 中
             imgDiv.appendChild(img);
 
             // 创建 stats div
             const statsDiv = document.createElement('div');
-            statsDiv.id = `weapon${weaponKey}-status`;
+            statsDiv.id = `weapon${weapon}-status`;
             statsDiv.classList.add('stats');
 
             // 创建 span 标签
             const span = document.createElement('span');
-            span.id = `weapon${weaponKey}-power`;
+            span.id = `weapon${weapon}-power`;
 
             // 将 span 添加到 stats div 中
             statsDiv.appendChild(span);
@@ -333,7 +315,7 @@
 
             // 将 weaponItem 添加到 weaponList 中
             weapon_list_element.appendChild(weaponItem);
-        }
+        });
     }
 
     // 初始化附魔方案按钮
@@ -406,29 +388,28 @@
                 eo_updateUI(currentId);
             });
             button.addEventListener('mouseout', function () {
-                eo_updateUI(enchantmentScheme);
+                eo_updateUI(enchantmentScheme_Current);
             });
         });
     }
 
     function init_attributeList() {
         attribute_list_element.innerHTML = '';
-        let weaponCurrentAttribute = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme).weapon[currentWeapon];
+        let weaponCurrentAttribute = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon];
         entryArray.forEach(entry_index => {
             // 初始化附魔词条颜色
-            let weapons = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme).weapon;
-            for (let weaponKey in weapons) {
-                let spanWeapon = document.getElementById(`weapon${weaponKey}-power`);
+            weaponArray.forEach(weapon => {
+                let spanWeapon = document.getElementById(`weapon${weapon}-power`);
 
                 // 检查 spanWeapon 是否存在
                 if (spanWeapon) {
                     let weaponEntryColorStatus = document.createElement('span');
-                    weaponEntryColorStatus.id = `weapon${weaponKey}-power-${entry_index}`;
+                    weaponEntryColorStatus.id = `weapon${weapon}-power-${entry_index}`;
                     weaponEntryColorStatus.className = 'entry-color-status';
                     weaponEntryColorStatus.innerText = "⬜";
                     spanWeapon.appendChild(weaponEntryColorStatus);
                 }
-            }
+            });
 
             // 初始化附魔词条
             let entryDiv = document.createElement('div');
@@ -437,7 +418,7 @@
             let entry = weaponCurrentAttribute[entry_index];
             let attributeName = entry.attributeName || "？？？？？"; // 如果没有属性名，则默认显示 "？？？"
             let attributeValue = entry.entryValue || 0; // 如果没有属性值，则默认值为 0
-            let attributeColor = entry.entryColor || 'black'; // 如果没有设置颜色，则默认设置为 'black'
+            let attributeColor = entry.entryColor || '#262626'; // 如果没有设置颜色，则默认设置为 'black'
             let lockedStatus = entry.lock === 1 ? true : false; // 判断属性是否锁定
 
             // 设置 entryDiv 的内容
@@ -453,7 +434,7 @@
     }
     // 更新页面内容
     function update_attributeList() {
-        let weaponCurrentAttribute = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme).weapon[currentWeapon];
+        let weaponCurrentAttribute = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon];
         entryArray.forEach(entry_index => {
             let statusSpan = document.getElementById(`lockStatus_${entry_index}`);
             let attributeSpan = document.getElementById(`attribute_${entry_index}`);
@@ -481,7 +462,7 @@
     let totalPower_last = 0;
     function update_totalPower(animation = true) {
         // 更新数值
-        let totalPower_current = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme).totalPower;
+        let totalPower_current = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).totalPower;
         totalPower_element.textContent = totalPower_current;
         if (animation) {
             // 创建浮动的数字
@@ -521,13 +502,13 @@
             weaponStatus.classList.add('blink');
             weaponStatus.classList.add('dark');
         }
-        let weaponCurrentAttribute = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme).weapon[selectedWeapon];
+        let weaponCurrentAttribute = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[selectedWeapon];
         entryArray.forEach(entry_index => {
             let weaponEntryColorStatus = document.getElementById(`weapon${selectedWeapon}-power-${entry_index}`);
             // 获取属性数据
             let entry = weaponCurrentAttribute[entry_index];
             let attributeColor = entry.entryColor || '#262626'; // 如果没有设置颜色，则默认设置为 'black'
-            let attributeStatueIcon = Object.values(attributeRankContent).find(item1 => item1.color === attributeColor).icon;
+            let attributeStatueIcon = attributeRankContent.find(item1 => item1.color === attributeColor).icon;
             // 设置 entry 的内容
             weaponEntryColorStatus.innerHTML = attributeStatueIcon;
         });
@@ -612,17 +593,17 @@
         return 100;
     }
     function get_colorGemCost() {
-        let current_EntryArray = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme).weapon[currentWeapon];
+        let current_EntryArray = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon];
         return Object.values(current_EntryArray).reduce((sum, entry) => sum + entry.lock, 0);
     }
 
     // 检查是否含有珍贵属性并继续执行
     function checkRarity() {
-        let weaponCurrentAttribute = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme).weapon[currentWeapon];
+        let weaponCurrentAttribute = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon];
         let rarityCount = 0;
         entryArray.forEach(entry_index => {
             if (weaponCurrentAttribute[entry_index].lock === 0) {
-                let rarityRank = Object.values(attributeRankContent).find(item1 => item1.color === weaponCurrentAttribute[entry_index].entryColor).index;
+                let rarityRank = attributeRankContent.find(item1 => item1.color === weaponCurrentAttribute[entry_index].entryColor).index;
                 if (rarityRank <= 2) {
                     rarityCount++;
                 }
@@ -647,7 +628,7 @@
     }
     // 随机生成多条附魔词条
     function generate_Enchantments() {
-        let weaponCurrentAttribute = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme).weapon[currentWeapon];
+        let weaponCurrentAttribute = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon];
         entryArray.forEach(entry_index => {
             if (weaponCurrentAttribute[entry_index].lock === 0) {
                 let randomEntry = generate_RandomEntry();
@@ -656,23 +637,23 @@
                 weaponCurrentAttribute[entry_index].entryPercent = randomEntry.entryPercent;
                 weaponCurrentAttribute[entry_index].entryColor = randomEntry.entryColor;
                 weaponCurrentAttribute[entry_index].entryPower = randomEntry.entryPower;
-                enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme).weapon[currentWeapon] = weaponCurrentAttribute;
+                enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon] = weaponCurrentAttribute;
             }
         });
-        totalPower_last = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme).totalPower;
-        enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme).totalPower = calTotalPower();
+        totalPower_last = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).totalPower;
+        enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).totalPower = calTotalPower();
     }
     function calTotalPower() {
         let totalPower = 0;
-        let weapons = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme).weapon;
-        for (let weaponKey in weapons) {
-            totalPower += calWeanontPower(weaponKey);
-        }
+        weaponArray.forEach(weapon => {
+            totalPower += calWeanontPower(weapon);
+        });
+        let weapons = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon;
         return totalPower.toFixed(2);
     }
     function calWeanontPower(weaponKey) {
         let totalPower = 0;
-        let weapon = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme).weapon[weaponKey];
+        let weapon = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[weaponKey];
         for (let key in weapon) {
             totalPower += Number(weapon[key].entryPower);
         }
@@ -680,26 +661,27 @@
     }
     // 随机生成一条附魔词条
     function generate_RandomEntry() {
-        let entry_Index = entriesContent[getRandom_Index(entriesContent)];
-        let attribute_Rank = attributeRankContent[getRandom_Index(attributeRankContent)];
-        let rank_Count = Object.values(attributeRankContent).length;
-        let divisionValue = entry_Index.max / rank_Count;
+        let entry_index = getRandom_Index(entriesContent);
+        let attribute_index = getRandom_Index(attributeRankContent);
+        let entry_content = entriesContent.find(item => item.index === entry_index);
+        let attribute_content = attributeRankContent.find(item => item.index === attribute_index);
+        let rank_Count = attributeRankContent.length;
+        let divisionValue = entry_content.max / rank_Count;
         let rangeValue = Math.random() * divisionValue;
-        let attribute_Value = divisionValue * (rank_Count - attribute_Rank.index) + rangeValue;
-        let attribute_Percent = attribute_Value / entry_Index.max * 100;
-        let attribute_Power = entry_Index.power * attribute_Value;
+        let attribute_Value = divisionValue * (rank_Count - attribute_content.index) + rangeValue;
+        let attribute_Percent = attribute_Value / entry_content.max * 100;
+        let attribute_Power = entry_content.power * attribute_Value;
         return {
-            attributeName: entry_Index.name,
+            attributeName: entry_content.name,
             entryValue: attribute_Value.toFixed(2),
             entryPercent: attribute_Percent.toFixed(2),
             entryPower: attribute_Power.toFixed(2),
-            entryColor: attribute_Rank.color,
+            entryColor: attribute_content.color,
         };
     }
 
     function getRandom_Index(list) {
-        let rarities = Object.values(list).map(item => item.rarity);
-        let totalRarity = rarities.reduce((sum, rarity) => sum + rarity, 0);
+        let rarities = list.map(item => item.rarity);
 
         let cumulativeRarity = [];
         let cumulativeSum = 0;
@@ -707,7 +689,9 @@
             cumulativeSum += rarity;
             cumulativeRarity.push(cumulativeSum);
         }
+        let totalRarity = cumulativeRarity[cumulativeRarity.length - 1];
         let randomValue = Math.random() * totalRarity;
+
         for (let i = 0; i < cumulativeRarity.length; i++) {
             if (randomValue < cumulativeRarity[i]) {
                 return i + 1;
@@ -718,7 +702,7 @@
     function toggleLock(iconElement) {
         let entryId = iconElement.closest('.attribute').id;
         let entry_index = parseInt(entryId.split('_')[1]);
-        let lock = enchantments.find(item => item.enchantmentIndex === enchantmentScheme).weapon[currentWeapon][entry_index].lock;
+        let lock = enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon][entry_index].lock;
         let statusElement = iconElement.parentElement.querySelector('span');
         if (lock == 1) {
             statusElement.textContent = '🔓';
@@ -729,7 +713,7 @@
             statusElement.style.backgroundColor = 'red';
             lock = 1;
         }
-        enchantments.find(item => item.enchantmentIndex === enchantmentScheme).weapon[currentWeapon][entry_index].lock = lock;
+        enchantments.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon][entry_index].lock = lock;
         update_consumeResources();
     }
 </script>
@@ -944,6 +928,7 @@
         #totalBattlePower {
             font-size: smaller !important;
         }
+
         .add,
         .subtract {
             font-size: small !important;
@@ -1048,7 +1033,8 @@
         transition: transform 0.5s ease-out;
         z-index: 10;
     }
-    .add, 
+
+    .add,
     .subtract {
         font-size: 24px;
     }
