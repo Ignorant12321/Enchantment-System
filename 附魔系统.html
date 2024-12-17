@@ -799,6 +799,7 @@
         // 取消按钮点击时触发的逻辑
         cancelButton.onclick = function () {
             dialog.style.display = 'none'; // 隐藏对话框
+            document.getElementById('select_rarity').value = rarity_alert;
         };
     }
 
@@ -1805,7 +1806,8 @@
         <h2 class="h2_info">
             附魔信息
         </h2><br>
-        <div id="p_info_container" class="p_container" style="color: blue;background: linear-gradient(135deg,#fffc00,#ffffff)">
+        <div id="p_info_container" class="p_container"
+            style="color: blue;background: linear-gradient(135deg,#fffc00,#ffffff)">
             <br>
             <div id="div_info">
             </div>
