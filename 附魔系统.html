@@ -78,9 +78,9 @@
 <script>
     // 基本数据
     let enchantmentsData = [];
-    let entryArray = [1, 2, 3, 4, 5];
     let schemeArray = [1, 2, 3, 4, 5];
     let weaponArray = ['A', 'B', 'C', 'D', 'E', 'F'];
+    let entryArray = [1, 2, 3, 4, 5];
 
     let attributeRankContent = [
         { index: 1, rarity: 2, color: '#f5222d', icon: '🟥' },//红色
@@ -157,6 +157,7 @@
     const totalPower_element = document.getElementById('totalPower');
     const attribute_list_element = document.getElementById('attribute-list');
     const weapon_list_element = document.getElementById('weapon_list');
+    const refreshButton_element = document.getElementById('refreshButton');
 
     // 初始化事件
     // 页面加载完成时调用 adjustScale
@@ -563,6 +564,21 @@
                 showCustomDialog_NotEnough("彩玉不足，无法继续锁定附魔！");
         }
     }
+    const refreshCost_element = document.getElementById('refreshCost');
+    // 禁用附魔按钮
+    function disable_refreshButton() {
+        let lockCount = get_lockCounter();
+        let lockToatl = entryArray.length;
+        if (lockCount === lockToatl) {
+            refreshButton_element.disabled = true;
+            refreshCost_element.classList.add('disabled');
+        }
+        else {
+            refreshButton_element.disabled = false;
+            refreshCost_element.classList.remove('disabled');
+        }
+    }
+
     // 更新资源
     function update_resource() {
         update_money();
@@ -580,7 +596,7 @@
         whiteStone_element.textContent = whiteStone;
     }
     // 彩玉
-    let colorGem = 6;
+    let colorGem = 30;
     function update_colorGem() {
         colorGem_element.textContent = colorGem;
     }
@@ -605,14 +621,16 @@
         colorGemCost = get_colorGemCost();
         whiteStoneCost_element.textContent = whiteStoneCost;
         colorGemCost_element.textContent = colorGemCost;
-
     }
     function get_whiteStoneCost() {
         return 100;
     }
-    function get_colorGemCost() {
+    function get_lockCounter() {
         let current_EntryArray = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon];
         return Object.values(current_EntryArray).reduce((sum, entry) => sum + entry.lock, 0);
+    }
+    function get_colorGemCost() {
+        return get_lockCounter() * 1;
     }
 
     let rarity_alert = 2;
@@ -778,6 +796,7 @@
         }
         enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon][entry_index].lock = lock;
         update_consumeResources();
+        disable_refreshButton();
     }
 </script>
 
@@ -1350,13 +1369,26 @@
         margin-bottom: 10px;
     }
 
+    /* 激活状态样式 */
     #refreshButton:active {
         background-color: #218838;
+    }
+
+    /* 禁用状态样式 */
+    #refreshButton:disabled {
+        background-color: #b1d5c8;
+        color: #6b798e;
+        cursor: not-allowed;
+        border: 1px solid #ccc;
     }
 
     #refreshCost {
         font-size: 14px;
         color: #555;
+    }
+
+    #refreshCost.disabled {
+        text-decoration: line-through;
     }
 
     #refreshCost span {
