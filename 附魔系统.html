@@ -102,22 +102,22 @@
         { index: 9, name: "物穿", rarity: 8, power: 5, max: 200, type: "decimal", },
         { index: 10, name: "法穿", rarity: 8, power: 5, max: 100, type: "decimal", },
         { index: 11, name: "复活减少【秒】", rarity: 1, power: 200, max: 1.5, type: "decimal", },
-        { index: 12, name: "生命上限%", rarity: 1, power: 200, max: 5, type: "percent", },
-        { index: 13, name: "攻击%", rarity: 1, power: 200, max: 5, type: "percent", },
-        { index: 14, name: "法强%", rarity: 1, power: 200, max: 5, type: "percent", },
-        { index: 15, name: "物防%", rarity: 1, power: 200, max: 5, type: "percent", },
-        { index: 16, name: "法防%", rarity: 1, power: 200, max: 5, type: "percent", },
-        { index: 17, name: "物穿%", rarity: 1, power: 200, max: 3, type: "percent", },
-        { index: 18, name: "法穿%", rarity: 1, power: 200, max: 3, type: "percent", },
-        { index: 19, name: "暴击%", rarity: 1, power: 200, max: 5, type: "percent", },
-        { index: 20, name: "暴击伤害%", rarity: 1, power: 200, max: 5, type: "percent", },
-        { index: 21, name: "攻速%", rarity: 1, power: 200, max: 5, type: "percent", },
-        { index: 22, name: "移速%", rarity: 1, power: 200, max: 5, type: "percent", },
-        { index: 23, name: "物理吸血%", rarity: 1, power: 200, max: 5, type: "percent", },
-        { index: 24, name: "法术吸血%", rarity: 1, power: 200, max: 3, type: "percent", },
-        { index: 25, name: "暴击抵抗%", rarity: 1, power: 200, max: 5, type: "percent", },
-        { index: 26, name: "暴伤抵抗%", rarity: 1, power: 200, max: 5, type: "percent", },
-        { index: 27, name: "治疗加成%", rarity: 1, power: 200, max: 5, type: "percent", },
+        { index: 12, name: "生命上限", rarity: 1, power: 200, max: 5, type: "percent", },
+        { index: 13, name: "攻击", rarity: 1, power: 200, max: 5, type: "percent", },
+        { index: 14, name: "法强", rarity: 1, power: 200, max: 5, type: "percent", },
+        { index: 15, name: "物防", rarity: 1, power: 200, max: 5, type: "percent", },
+        { index: 16, name: "法防", rarity: 1, power: 200, max: 5, type: "percent", },
+        { index: 17, name: "物穿", rarity: 1, power: 200, max: 3, type: "percent", },
+        { index: 18, name: "法穿", rarity: 1, power: 200, max: 3, type: "percent", },
+        { index: 19, name: "暴击", rarity: 1, power: 200, max: 5, type: "percent", },
+        { index: 20, name: "暴击伤害", rarity: 1, power: 200, max: 5, type: "percent", },
+        { index: 21, name: "攻速", rarity: 1, power: 200, max: 5, type: "percent", },
+        { index: 22, name: "移速", rarity: 1, power: 200, max: 5, type: "percent", },
+        { index: 23, name: "物理吸血", rarity: 1, power: 200, max: 5, type: "percent", },
+        { index: 24, name: "法术吸血", rarity: 1, power: 200, max: 3, type: "percent", },
+        { index: 25, name: "暴击抵抗", rarity: 1, power: 200, max: 5, type: "percent", },
+        { index: 26, name: "暴伤抵抗", rarity: 1, power: 200, max: 5, type: "percent", },
+        { index: 27, name: "治疗加成", rarity: 1, power: 200, max: 5, type: "percent", },
     ];
 
     function init_enchantments() {
@@ -135,7 +135,8 @@
                 entryArray.forEach(entryIndex => {
                     weapon[entryIndex] = {
                         attributeName: "？？？？？",  // 词条名称
-                        entryValue: 0,               // 属性属性初始值
+                        attributeIndex: -1,           // 词条索引
+                        entryValue: -1,               // 属性属性初始值
                         entryPower: 0,               // 附魔战力初始值
                         entryPercent: 0,             // 属性百分比
                         entryColor: '#262626',       // 词条默认颜色
@@ -670,6 +671,7 @@
             if (weaponCurrentAttribute[entry_index].lock === 0) {
                 let randomEntry = generate_RandomEntry();
                 weaponCurrentAttribute[entry_index].attributeName = randomEntry.attributeName;
+                weaponCurrentAttribute[entry_index].attributeIndex = randomEntry.attributeIndex;
                 weaponCurrentAttribute[entry_index].entryValue = randomEntry.entryValue;
                 weaponCurrentAttribute[entry_index].entryPercent = randomEntry.entryPercent;
                 weaponCurrentAttribute[entry_index].entryColor = randomEntry.entryColor;
@@ -679,64 +681,6 @@
         });
         totalPower_last = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).totalPower;
         enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).totalPower = calTotalPower();
-    }
-    function calTotalPower() {
-        let totalPower = 0;
-        weaponArray.forEach(weapon => {
-            totalPower += calWeanontPower(weapon);
-        });
-        let weapons = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon;
-        return totalPower.toFixed(2);
-    }
-    function calWeanontPower(weaponKey) {
-        let totalPower = 0;
-        let weapon = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[weaponKey];
-        for (let key in weapon) {
-            totalPower += Number(weapon[key].entryPower);
-        }
-        return totalPower;
-    }
-    // 统计词条信息
-
-    function aggregate_Attributes() {
-        let aggregatedAttributes_list = {};  // 用来存储统计结果的对象
-        let data = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon;
-        // 使用 Object.values() 将 data 转换为数组进行遍历
-        Object.values(data).forEach(weapon => {
-            entryArray.forEach(entry => {
-                let attributeName = weapon[entry].attributeName;
-                if (attributeName === "？？？？？") {
-                    return;     // 排除 "？？？？？" 这个属性
-                }
-                let entryValue = weapon[entry].entryValue;
-                let entryType = entriesContent.find(item1 => item1.name === attributeName).type;
-
-                // 如果属性名已经存在，则累加
-                if (aggregatedAttributes_list[attributeName]) {
-                    let previousValue = parseFloat(aggregatedAttributes_list[attributeName]);
-                    let addValue = parseFloat(entryValue);
-                    let currentValue = (previousValue + addValue).toFixed(2);
-                    if (entryType == "decimal") {
-                        ;
-                    }
-                    else if (entryType == "percent") {
-                        currentValue += "%";
-                    }
-                    aggregatedAttributes_list[attributeName] = currentValue;
-                } else {
-                    // 否则初始化该属性
-                    let currentValue = parseFloat(entryValue);
-                    if (entryType == "decimal") {
-                        ;
-                    }
-                    else if (entryType == "percent") {
-                        currentValue += "%";
-                    }
-                    aggregatedAttributes_list[attributeName] = currentValue;
-                }
-            });
-        });
-        return aggregatedAttributes_list;
     }
 
     // 随机生成一条附魔词条
@@ -754,6 +698,7 @@
         let attribute_Type = entry_content.type;
         return {
             attributeName: entry_content.name,
+            attributeIndex: entry_index,
             entryValue: (attribute_Type === "decimal" ? attribute_Value.toFixed(2) : attribute_Type === "percent" ? attribute_Value.toFixed(2) + "%" : attribute_Value.toFixed(2)),
             entryPercent: attribute_Percent.toFixed(2),
             entryPower: attribute_Power.toFixed(2),
@@ -779,6 +724,66 @@
             }
         }
     }
+
+    function calTotalPower() {
+        let totalPower = 0;
+        weaponArray.forEach(weapon => {
+            totalPower += calWeanontPower(weapon);
+        });
+        let weapons = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon;
+        return totalPower.toFixed(2);
+    }
+    function calWeanontPower(weaponKey) {
+        let totalPower = 0;
+        let weapon = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[weaponKey];
+        for (let key in weapon) {
+            totalPower += Number(weapon[key].entryPower);
+        }
+        return totalPower;
+    }
+    // 统计词条信息
+    function aggregate_Attributes() {
+        let aggregatedAttributes_list = {};  // 用来存储统计结果的对象
+        let data = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon;
+        // 使用 Object.values() 将 data 转换为数组进行遍历
+        Object.values(data).forEach(weapon => {
+            entryArray.forEach(entry => {
+                let attributeIndex = weapon[entry].attributeIndex;
+                if (attributeIndex === -1) {
+                    return;     // 排除 未刷新过的属性“？？？？？”
+                }
+                let entryValue = weapon[entry].entryValue;
+                let entryType = entriesContent.find(item1 => item1.index === attributeIndex).type;
+
+                // 如果属性名已经存在，则累加
+                if (aggregatedAttributes_list[attributeIndex]) {
+                    let previousValue = parseFloat(aggregatedAttributes_list[attributeIndex]);
+                    let addValue = parseFloat(entryValue);
+                    let currentValue = (previousValue + addValue).toFixed(2);
+                    if (entryType == "decimal") {
+                        ;
+                    }
+                    else if (entryType == "percent") {
+                        currentValue += "%";
+                    }
+                    aggregatedAttributes_list[attributeIndex] = currentValue;
+                }
+                else {
+                    // 否则初始化该属性
+                    let currentValue = parseFloat(entryValue);
+                    if (entryType == "decimal") {
+                        ;
+                    }
+                    else if (entryType == "percent") {
+                        currentValue += "%";
+                    }
+                    aggregatedAttributes_list[attributeIndex] = currentValue;
+                }
+            });
+        });
+        return aggregatedAttributes_list;
+    }
+
     // 锁定或解锁附魔属性
     function toggleLock(iconElement) {
         let entryId = iconElement.closest('.attribute').id;
@@ -882,16 +887,17 @@
         if (data && Object.keys(data).length > 0) {
             // 将 data 转换为数组并按值排序（由大到小）
             const sortedData = Object.entries(data).sort((a, b) => {
-                const aPower = entriesContent.find(item1 => item1.name === a[0])?.power || 1;   // 默认值 1
-                const bPower = entriesContent.find(item1 => item1.name === b[0])?.power || 1;   // 默认值 1
+                const aPower = entriesContent.find(item1 => item1.index === a[0])?.power || 1;   // 默认值 1
+                const bPower = entriesContent.find(item1 => item1.index === b[0])?.power || 1;   // 默认值 1
                 return parseFloat(b[1]) * bPower - parseFloat(a[1]) * aPower;
             });
 
             // 遍历排序后的数组并添加元素
             sortedData.forEach(([key, value], index) => {
+                let attributeName = entriesContent.find(item1 => item1.index == key)?.name || key;
                 let info_item = document.createElement('div');
                 info_item.className = 'info-item';
-                info_item.textContent = `${index + 1}. ${key}: ${value}`;
+                info_item.textContent = `${index + 1}. ${attributeName}: ${value}`;
                 div_element.appendChild(info_item);
             });
         } else {
