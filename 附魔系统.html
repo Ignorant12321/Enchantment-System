@@ -264,6 +264,7 @@
         // 更新附魔属性列表
         update_weaponValue();
         update_attributeList();
+        disable_refreshButton();
         // 更新附魔状态
         for (let weaponKey in weapons) {
             update_status(selectedWeapon = weaponKey, animation = false);
@@ -278,6 +279,7 @@
         // 更新词条列表
         update_attributeList();
         update_weaponValue();
+        disable_refreshButton();
         // 选择当前武器的UI
         if (event.button === 2) {
             // 移动放大效果
@@ -604,8 +606,8 @@
     // 禁用附魔按钮
     function disable_refreshButton() {
         let lockCount = get_lockCounter();
-        let lockToatl = entryArray.length;
-        if (lockCount === lockToatl) {
+        let lockTotal = entryArray.length;
+        if (lockCount === lockTotal) {
             refreshButton_element.disabled = true;
             refreshCost_element.classList.add('disabled');
         }
@@ -1074,7 +1076,10 @@
         color: white;
         border-radius: 8px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        height: 6vh;
+        height: 5vh;
+        transform: translateY(1vh);
+        margin-left: 1vw;
+        margin-right: 1vw;
     }
 
     .section-title {
@@ -1149,7 +1154,7 @@
         color: white;
         cursor: pointer;
         transition: background-color 0.3s, transform 0.2s;
-        padding: 6px 12px;
+        padding: 2px 7px;
         font-size: 16px;
         border-radius: 4px;
     }
@@ -1200,7 +1205,7 @@
         }
 
         .add-button {
-            padding: 3px 6px;
+            padding: 1px 4px;
             font-size: 10px;
             border-radius: 3px;
         }
@@ -1331,7 +1336,6 @@
     /* 武器区域 */
     .weaponList-container {
         position: relative;
-        height: 90vh;
     }
 
     /* 武器列表 */
