@@ -48,7 +48,7 @@
         <!-- 武器区域 -->
         <div class="weaponList-container">
             <!-- 总战力 -->
-            <div id="totalBattlePower">
+            <div id="totalBattlePower" onclick="showCustomDialog_info();">
                 总附魔战力: <span id="totalPower">0</span>
             </div>
             <!-- 武器信息 -->
@@ -58,10 +58,11 @@
         <!-- 词条详情 -->
         <div id="entry-detail-container">
             <div class="attributes-info-container" id="attributesInfocontainer">
-                <div id="enchantment-info" onclick="showCustomDialog_info();">附魔信息</div>
+                <div id="enchantment-info">附魔信息</div>
                 <div id="attribute-list">
                     <!-- 随机词条显示 -->
                 </div>
+                <div id="weaponValue" class="weaponValue"></div>
             </div>
             <div id="refreshButton-container">
                 <button id="refreshButton" class="refreshButton" onclick="refreshEnchant_unchecked()">刷新附魔</button>
@@ -77,10 +78,10 @@
 
 <script>
     // 基本数据
-    let enchantmentsData = [];
-    let schemeArray = [1, 2, 3, 4, 5];
-    let weaponArray = ['A', 'B', 'C', 'D', 'E', 'F'];
-    let entryArray = [1, 2, 3, 4, 5];
+    let enchantmentsData = [];  // 附魔总数据
+    let schemeArray = [1, 2, 3, 4, 5];  // 方案列表
+    let weaponArray = ['A', 'B', 'C', 'D', 'E', 'F'];   // 武器列表
+    let entryArray = [1, 2, 3, 4, 5];   // 词条列表
 
     let attributeRankContent = [
         { index: 1, rarity: 2, color: '#f5222d', icon: '🟥' },//红色
@@ -89,6 +90,14 @@
         { index: 4, rarity: 55, color: '#1890ff', icon: '🟦' },//蓝色
         { index: 5, rarity: 100, color: '#52c41a', icon: '🟩' },//绿色
         { index: 6, rarity: 325, color: '#262626', icon: '⬜' },//黑色
+    ];
+    let weaponContent = [
+        { index: "A", name: "雷霆魔刃", attributeIndex: 5, addValue: 0.1, },
+        { index: "B", name: "圣灵法典", attributeIndex: 14, addValue: 0.1, },
+        { index: "C", name: "生命沙漏", attributeIndex: 1, addValue: 0.5, },
+        { index: "D", name: "炽焰神铠", attributeIndex: 6, addValue: 0.1, },
+        { index: "E", name: "精灵法衣", attributeIndex: 8, addValue: 0.1, },
+        { index: "F", name: "生命之心", attributeIndex: 1, addValue: 0.5, },
     ];
     let entriesContent = [
         { index: 1, name: "生命上限", rarity: 8, power: 0.5, max: 8000, type: "decimal", },
@@ -132,8 +141,9 @@
             weaponArray.forEach(weaponType => {
                 let weapon = {};
                 // 为每个武器的每个附魔槽赋予初始值
+                weapon["content"] = {};
                 entryArray.forEach(entryIndex => {
-                    weapon[entryIndex] = {
+                    weapon.content[entryIndex] = {
                         attributeName: "？？？？？",  // 词条名称
                         attributeIndex: -1,           // 词条索引
                         entryValue: -1,               // 属性属性初始值
@@ -143,6 +153,10 @@
                         lock: 0                      // 初始词条不锁定
                     };
                 });
+                weapon["extra"] = {};
+                weapon.extra["index"] = `${weaponContent.find(item1 => item1.index === weaponType).attributeIndex}`;
+                weapon.extra["value"] = 0;
+                weapon.extra["power"] = 0;
                 scheme.weapon[weaponType] = weapon;
             });
             enchantmentsData.push(scheme);
@@ -159,6 +173,8 @@
     const attribute_list_element = document.getElementById('attribute-list');
     const weapon_list_element = document.getElementById('weapon_list');
     const refreshButton_element = document.getElementById('refreshButton');
+    const enchantment_info_element = document.getElementById('enchantment-info');
+    const weaponValue_element = document.getElementById('weaponValue');
 
     // 初始化事件
     // 页面加载完成时调用 adjustScale
@@ -170,6 +186,7 @@
         init_enchantments();
         init_eo();
         init_weapon_list();
+        update_weaponValue();
         init_attributeList();
         init_diag_setting();
         eo_updateUI(enchantmentScheme_Current);
@@ -245,6 +262,7 @@
         // 更新总战力
         update_totalPower(animation = false);
         // 更新附魔属性列表
+        update_weaponValue();
         update_attributeList();
         // 更新附魔状态
         for (let weaponKey in weapons) {
@@ -259,6 +277,7 @@
         currentWeapon = parentElement.id.split('-')[2];
         // 更新词条列表
         update_attributeList();
+        update_weaponValue();
         // 选择当前武器的UI
         if (event.button === 2) {
             // 移动放大效果
@@ -279,6 +298,21 @@
             divItem.classList.add('Img_active');
         }
     }
+    // 刷新当前武器的附加值
+    function update_weaponValue() {
+        let shouldSetNeverFlag = Object.values(enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content).every(item1 => item1.attributeIndex === -1);
+        if (shouldSetNeverFlag) {
+            // 武器未刷新过
+            weaponValue_element.textContent = '【武器特性：？？？】';
+        } else {
+            let weapon_item = weaponContent.find(item1 => item1.index === currentWeapon);
+            let content_name = entriesContent.find(item1 => item1.index === weapon_item.attributeIndex).name;
+            let currentWeapon_value = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].extra.value;
+            let content = `【武器特性：+ ${currentWeapon_value} ${content_name}】`;
+            // enchantment_info_element.textContent = weapon.name;
+            weaponValue_element.textContent = content;
+        }
+    }
     function clear_weaponUI_scale() {
         let items = document.querySelectorAll('.weapon-item');
         items.forEach(item => {
@@ -294,7 +328,6 @@
 
     function init_weapon_list() {
         weapon_list_element.innerHTML = '';
-        let weapons = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon;
         weaponArray.forEach(weapon => {
             // 创建 weapon-item div
             const weaponItem = document.createElement('div');
@@ -415,7 +448,7 @@
 
     function init_attributeList() {
         attribute_list_element.innerHTML = '';
-        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon];
+        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content;
         entryArray.forEach(entry_index => {
             // 初始化附魔词条颜色
             weaponArray.forEach(weapon => {
@@ -452,9 +485,10 @@
             attribute_list_element.appendChild(entryDiv);
         });
     }
+
     // 更新页面内容
     function update_attributeList() {
-        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon];
+        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content;
         entryArray.forEach(entry_index => {
             let statusSpan = document.getElementById(`lockStatus_${entry_index}`);
             let attributeSpan = document.getElementById(`attribute_${entry_index}`);
@@ -522,7 +556,7 @@
             weaponStatus.classList.add('blink');
             weaponStatus.classList.add('dark');
         }
-        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[selectedWeapon];
+        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[selectedWeapon].content;
         entryArray.forEach(entry_index => {
             let weaponEntryColorStatus = document.getElementById(`weapon${selectedWeapon}-power-${entry_index}`);
             // 获取属性数据
@@ -546,6 +580,7 @@
     function updateUI() {
         update_whiteStone();
         update_colorGem();
+        update_weaponValue();
         update_attributeList();
         update_status();
         update_totalPower();
@@ -627,7 +662,7 @@
         return 100;
     }
     function get_lockCounter() {
-        let current_EntryArray = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon];
+        let current_EntryArray = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content;
         return Object.values(current_EntryArray).reduce((sum, entry) => sum + entry.lock, 0);
     }
     function get_colorGemCost() {
@@ -637,7 +672,7 @@
     let rarity_alert = 2;
     // 检查是否含有珍贵属性并继续执行
     function checkRarity() {
-        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon];
+        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content;
         let rarityCount = 0;
         entryArray.forEach(entry_index => {
             if (weaponCurrentAttribute[entry_index].lock === 0) {
@@ -661,12 +696,36 @@
     function refreshEnchant_cheked() {
         increaseResource('whiteStone', -whiteStoneCost);
         increaseResource('colorGem', -colorGemCost);
+        updateWeapon();
         generate_Enchantments();
         updateUI();
+        let divItem = document.getElementById(`img${currentWeapon}_div`);
+        if (!divItem.classList.contains('Img_active')) {
+            divItem.classList.add('Img_active');
+        }
+    }
+    // 概率升级武器
+    let update_probability = 0.4;
+    let update_enable = true;
+    function updateWeapon() {
+        if (!update_enable) {
+            return;
+        }
+        // 找到当前武器
+        let currentWeapon_info = weaponContent.find(item1 => item1.index === currentWeapon);
+        let power = entriesContent.find(item1 => item1.index === currentWeapon_info.attributeIndex).power;
+        let currentWeapon_extra = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].extra;
+        // 如果随机数小于升级概率，则进行升级
+        let randomChance = Math.random();
+        if (randomChance < update_probability) {
+            currentWeapon_extra.value += currentWeapon_info.addValue;
+            currentWeapon_extra.value = parseFloat((currentWeapon_extra.value).toFixed(2));
+            currentWeapon_extra.power = currentWeapon_extra.value * power;
+        }
     }
     // 随机生成多条附魔词条
     function generate_Enchantments() {
-        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon];
+        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content;
         entryArray.forEach(entry_index => {
             if (weaponCurrentAttribute[entry_index].lock === 0) {
                 let randomEntry = generate_RandomEntry();
@@ -676,7 +735,6 @@
                 weaponCurrentAttribute[entry_index].entryPercent = randomEntry.entryPercent;
                 weaponCurrentAttribute[entry_index].entryColor = randomEntry.entryColor;
                 weaponCurrentAttribute[entry_index].entryPower = randomEntry.entryPower;
-                enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon] = weaponCurrentAttribute;
             }
         });
         totalPower_last = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).totalPower;
@@ -730,15 +788,16 @@
         weaponArray.forEach(weapon => {
             totalPower += calWeanontPower(weapon);
         });
-        let weapons = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon;
         return totalPower.toFixed(2);
     }
     function calWeanontPower(weaponKey) {
         let totalPower = 0;
-        let weapon = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[weaponKey];
-        for (let key in weapon) {
-            totalPower += Number(weapon[key].entryPower);
+        let weapon_content = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[weaponKey].content;
+        for (let key in weapon_content) {
+            totalPower += Number(weapon_content[key].entryPower);
         }
+        let weapon_extra = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[weaponKey].extra;
+        totalPower += Number(weapon_extra.power);
         return totalPower;
     }
     // 统计词条信息
@@ -746,13 +805,15 @@
         let aggregatedAttributes_list = {};  // 用来存储统计结果的对象
         let data = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon;
         // 使用 Object.values() 将 data 转换为数组进行遍历
-        Object.values(data).forEach(weapon => {
+        Object.values(data).forEach(weaponKey => {
+            // 武器的词条属性
+            let weapon_content = weaponKey.content;
             entryArray.forEach(entry => {
-                let attributeIndex = weapon[entry].attributeIndex;
+                let attributeIndex = weapon_content[entry].attributeIndex;
                 if (attributeIndex === -1) {
                     return;     // 排除 未刷新过的属性“？？？？？”
                 }
-                let entryValue = weapon[entry].entryValue;
+                let entryValue = weapon_content[entry].entryValue;
                 let entryType = entriesContent.find(item1 => item1.index === attributeIndex).type;
 
                 // 如果属性名已经存在，则累加
@@ -780,6 +841,27 @@
                     aggregatedAttributes_list[attributeIndex] = currentValue;
                 }
             });
+            // 武器的升级属性
+            {
+                let weapon_extra = weaponKey.extra;
+                let weaponValue = weapon_extra.value;
+                let attributeIndex = weapon_extra.index;
+
+                // 如果属性名已经存在，则累加
+                if (aggregatedAttributes_list[attributeIndex]) {
+                    let previousValue = parseFloat(aggregatedAttributes_list[attributeIndex]);
+                    let addValue = parseFloat(weaponValue);
+                    let currentValue = (previousValue + addValue).toFixed(2);
+                    aggregatedAttributes_list[attributeIndex] = currentValue;
+                }
+                else {
+                    // 且不为0，初始化该属性
+                    if (weaponValue != 0) {
+                        let currentValue = parseFloat(weaponValue);
+                        aggregatedAttributes_list[attributeIndex] = currentValue;
+                    }
+                }
+            }
         });
         return aggregatedAttributes_list;
     }
@@ -788,7 +870,7 @@
     function toggleLock(iconElement) {
         let entryId = iconElement.closest('.attribute').id;
         let entry_index = parseInt(entryId.split('_')[1]);
-        let lock = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon][entry_index].lock;
+        let lock = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content[entry_index].lock;
         let statusElement = iconElement.parentElement.querySelector('span');
         if (lock == 1) {
             statusElement.textContent = '🔓';
@@ -799,7 +881,7 @@
             statusElement.style.backgroundColor = 'red';
             lock = 1;
         }
-        enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon][entry_index].lock = lock;
+        enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content[entry_index].lock = lock;
         update_consumeResources();
         disable_refreshButton();
     }
@@ -972,7 +1054,7 @@
         color: #333;
     }
 
-    #attribute-list {
+    #weaponValue {
         margin-bottom: 20px;
     }
 
@@ -1022,6 +1104,10 @@
         border-radius: 5px;
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         background: linear-gradient(-45deg, #ffefba, #ffffff);
+    }
+
+    .weaponValue {
+        color: #45465e;
     }
 
     .locked {
@@ -1101,7 +1187,11 @@
             font-size: smaller;
         }
 
-        #attribute-list {
+        .weaponValue {
+            font-size: smaller;
+        }
+
+        #weaponValue {
             margin-bottom: 10px;
         }
 
