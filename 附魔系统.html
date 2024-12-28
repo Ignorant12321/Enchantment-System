@@ -265,6 +265,7 @@
         update_weaponValue();
         update_attributeList();
         disable_refreshButton();
+        update_consumeResources();
         // 更新附魔状态
         for (let weaponKey in weapons) {
             update_status(selectedWeapon = weaponKey, animation = false);
@@ -280,6 +281,7 @@
         update_attributeList();
         update_weaponValue();
         disable_refreshButton();
+        update_consumeResources();
         // 选择当前武器的UI
         if (event.button === 2) {
             // 移动放大效果
