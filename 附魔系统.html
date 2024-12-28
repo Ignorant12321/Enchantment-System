@@ -967,21 +967,22 @@
 
         // 创建并格式化信息
         let data = aggregate_Attributes();
+        let data_power = {};
+        for (let key in data) {
+            data_power[key] = parseFloat(data[key]) * (entriesContent.find(item1 => item1.index == key)).power;
+        }
 
-        if (data && Object.keys(data).length > 0) {
+        if (data_power && Object.keys(data_power).length > 0) {
             // 将 data 转换为数组并按值排序（由大到小）
-            const sortedData = Object.entries(data).sort((a, b) => {
-                const aPower = entriesContent.find(item1 => item1.index === a[0])?.power || 1;   // 默认值 1
-                const bPower = entriesContent.find(item1 => item1.index === b[0])?.power || 1;   // 默认值 1
-                return parseFloat(b[1]) * bPower - parseFloat(a[1]) * aPower;
-            });
+            const sortedData = Object.entries(data_power).sort((a, b) => parseFloat(b[1]) - parseFloat(a[1]));
 
             // 遍历排序后的数组并添加元素
-            sortedData.forEach(([key, value], index) => {
-                let attributeName = entriesContent.find(item1 => item1.index == key)?.name || key;
+            sortedData.forEach((item, index) => {
+                let key = item[0];
+                let attributeName = entriesContent.find(item1 => item1.index == key)?.name || item;
                 let info_item = document.createElement('div');
                 info_item.className = 'info-item';
-                info_item.textContent = `${index + 1}. ${attributeName}: ${value}`;
+                info_item.textContent = `${index + 1}. ${attributeName}: ${data[key]}`;
                 div_element.appendChild(info_item);
             });
         } else {
