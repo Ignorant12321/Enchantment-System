@@ -84,12 +84,12 @@
     let entryArray = [1, 2, 3, 4, 5];   // 词条列表
 
     let attributeRankContent = [
-        { index: 1, rarity: 2, color: '#f5222d', icon: '🟥' },//红色
-        { index: 2, rarity: 6, color: '#fa8c16', icon: '🟧' },//橙色
-        { index: 3, rarity: 12, color: '#9254de', icon: '🟪' },//紫色
-        { index: 4, rarity: 55, color: '#1890ff', icon: '🟦' },//蓝色
-        { index: 5, rarity: 100, color: '#52c41a', icon: '🟩' },//绿色
-        { index: 6, rarity: 325, color: '#262626', icon: '⬜' },//黑色
+        { index: 1, rarity: 2, base: 85, range: 15, color: '#f5222d', icon: '🟥' },//红色
+        { index: 2, rarity: 6, base: 50, range: 35, color: '#fa8c16', icon: '🟧' },//橙色
+        { index: 3, rarity: 12, base: 20, range: 30, color: '#9254de', icon: '🟪' },//紫色
+        { index: 4, rarity: 55, base: 10, range: 10, color: '#1890ff', icon: '🟦' },//蓝色
+        { index: 5, rarity: 100, base: 5, range: 5, color: '#52c41a', icon: '🟩' },//绿色
+        { index: 6, rarity: 325, base: 0, range: 5, color: '#262626', icon: '⬜' },//黑色
     ];
     let weaponContent = [
         { index: "A", name: "雷霆魔刃", attributeIndex: 5, addValue: 0.05, },
@@ -752,9 +752,11 @@
         let entry_content = entriesContent.find(item => item.index === entry_index);
         let attribute_content = attributeRankContent.find(item => item.index === attribute_index);
         let rank_Count = attributeRankContent.length;
-        let divisionValue = entry_content.max / rank_Count;
-        let rangeValue = Math.random() * divisionValue;
-        let attribute_Value = divisionValue * (rank_Count - attribute_content.index) + rangeValue;
+
+        let base_Value = attribute_content.base / 100;
+        let range_Value = Math.random() * attribute_content.range / 100;
+        let attribute_Value = entry_content.max * (base_Value + range_Value);
+        
         let attribute_Percent = attribute_Value / entry_content.max * 100;
         let attribute_Power = entry_content.power * attribute_Value;
         let attribute_Type = entry_content.type;
