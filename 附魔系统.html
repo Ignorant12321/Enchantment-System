@@ -183,6 +183,7 @@
     };
     // 页面加载完成后执行
     document.addEventListener('DOMContentLoaded', () => {
+        // show_loadDiag();
         init_enchantments();
         init_eo();
         init_weapon_list();
@@ -756,7 +757,7 @@
         let base_Value = attribute_content.base / 100;
         let range_Value = Math.random() * attribute_content.range / 100;
         let attribute_Value = entry_content.max * (base_Value + range_Value);
-        
+
         let attribute_Percent = attribute_Value / entry_content.max * 100;
         let attribute_Power = entry_content.power * attribute_Value;
         let attribute_Type = entry_content.type;
@@ -1973,7 +1974,7 @@
     </div>
 </div>
 
-<!-- 设置 -->
+<!-- 附魔信息 -->
 <div id="customDialog_info" class="custom-dialog">
     <div class="custom-dialog-content" style="color: black;background: linear-gradient(135deg,#ffefba,#ffffff);">
         <h2 class="h2_info">
@@ -1990,6 +1991,176 @@
 
     </div>
 </div>
+
+<style>
+    /* 加载界面 */
+    .load-background {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 99;
+    }
+
+    #load-background {
+        animation: fadeOut 1s ease-out forwards;
+    }
+
+    #load-background.hidden {
+        display: none;
+    }
+
+    .loader {
+        display: none;
+        width: 48px;
+        height: 48px;
+        margin: auto;
+        position: relative;
+        z-index: 100;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .loader:before {
+        content: '';
+        width: 48px;
+        height: 5px;
+        background: #f0808050;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        border-radius: 50%;
+        animation: shadow324 0.5s linear infinite;
+    }
+
+    .loader:after {
+        content: '';
+        width: 100%;
+        height: 100%;
+        background: #f08080;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: 4px;
+        animation: jump7456 0.5s linear infinite;
+    }
+
+    #loadDiag_info {
+        display: none;
+        position: fixed;
+        margin-top: 3vh;
+        top: 60%;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        font-size: 18px;
+        font-family: Arial, sans-serif;
+        z-index: 101;
+    }
+
+    #loadDiag_info::after {
+        content: '加载中';
+        animation: loadingText 1.5s steps(3) infinite;
+    }
+
+    @keyframes loadingText {
+        0% {
+            content: '加载中.';
+        }
+
+        33% {
+            content: '加载中..';
+        }
+
+        66% {
+            content: '加载中...';
+        }
+
+        100% {
+            content: '加载中.';
+        }
+    }
+
+    @keyframes jump7456 {
+        15% {
+            border-bottom-right-radius: 3px;
+        }
+
+        25% {
+            transform: translateY(9px) rotate(22.5deg);
+        }
+
+        50% {
+            transform: translateY(18px) scale(1, .9) rotate(45deg);
+            border-bottom-right-radius: 40px;
+        }
+
+        75% {
+            transform: translateY(9px) rotate(67.5deg);
+        }
+
+        100% {
+            transform: translateY(0) rotate(90deg);
+        }
+    }
+
+    @keyframes shadow324 {
+
+        0%,
+        100% {
+            transform: scale(1, 1);
+        }
+
+        50% {
+            transform: scale(1.2, 1);
+        }
+    }
+
+    @keyframes fadeOut {
+        0% {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        100% {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+    }
+</style>
+
+<!-- 加载弹窗 -->
+<div class="load-background" id="loadBackground"></div>
+<div id="loadDiag" class="loader"></div>
+<div id="loadDiag_info"></div>
+
+<script>
+    // 显示加载弹窗
+    function show_loadDiag() {
+        if (isMobileDevice()) {
+            document.getElementById('loadBackground').classList.remove('hidden');
+            document.getElementById('loadBackground').style.display = 'block';
+            document.getElementById('loadDiag').style.display = 'block';
+            document.getElementById('loadDiag_info').style.display = 'block';
+            setTimeout(() => {
+                hide_loadDiag();
+            }, 1000);
+        }
+    }
+    // 隐藏加载弹窗
+    function hide_loadDiag() {
+        document.getElementById('loadBackground').classList.add('hidden');
+        document.getElementById('loadBackground').style.display = 'none';
+        document.getElementById('loadDiag').style.display = 'none';
+        document.getElementById('loadDiag_info').style.display = 'none';
+    }
+</script>
+
 
 <script>
     let weapon_PNG = {
