@@ -7,6 +7,11 @@
     <title>附魔战力系统</title>
 </head>
 
+<!-- 加载弹窗 -->
+<div class="load-background" id="loadBackground"></div>
+<div id="loadDiag" class="loader"></div>
+<div id="loadDiag_info"></div>
+
 <body>
     <!-- 顶侧栏 -->
     <div class="top-bar">
@@ -176,14 +181,25 @@
     const enchantment_info_element = document.getElementById('enchantment-info');
     const weaponValue_element = document.getElementById('weaponValue');
 
-    // 初始化事件
+    // 页面加载
+    window.addEventListener('load', function () {
+        hide_loadDiag();
+    });
+    document.onreadystatechange = function () {
+        if (document.readyState === 'loading') {
+            show_loadDiag();
+        } else if (document.readyState === 'interactive') {
+            show_loadDiag();
+        }
+    };
+
     // 页面加载完成时调用 adjustScale
     window.onload = function () {
         adjustScale();
     };
+
     // 页面加载完成后执行
     document.addEventListener('DOMContentLoaded', () => {
-        // show_loadDiag();
         init_enchantments();
         init_eo();
         init_weapon_list();
@@ -210,6 +226,21 @@
                 switchWeapon(event);
             });
         });
+    }
+
+    // 显示加载弹窗
+    function show_loadDiag() {
+        document.getElementById('loadBackground').classList.remove('hidden');
+        document.getElementById('loadBackground').style.display = 'block';
+        document.getElementById('loadDiag').style.display = 'block';
+        document.getElementById('loadDiag_info').style.display = 'block';
+    }
+    // 隐藏加载弹窗
+    function hide_loadDiag() {
+        document.getElementById('loadBackground').classList.add('hidden');
+        document.getElementById('loadBackground').style.display = 'none';
+        document.getElementById('loadDiag').style.display = 'none';
+        document.getElementById('loadDiag_info').style.display = 'none';
     }
 
     let weapon_list_element_scale = 1;
@@ -2133,34 +2164,6 @@
         }
     }
 </style>
-
-<!-- 加载弹窗 -->
-<div class="load-background" id="loadBackground"></div>
-<div id="loadDiag" class="loader"></div>
-<div id="loadDiag_info"></div>
-
-<script>
-    // 显示加载弹窗
-    function show_loadDiag() {
-        if (isMobileDevice()) {
-            document.getElementById('loadBackground').classList.remove('hidden');
-            document.getElementById('loadBackground').style.display = 'block';
-            document.getElementById('loadDiag').style.display = 'block';
-            document.getElementById('loadDiag_info').style.display = 'block';
-            setTimeout(() => {
-                hide_loadDiag();
-            }, 1000);
-        }
-    }
-    // 隐藏加载弹窗
-    function hide_loadDiag() {
-        document.getElementById('loadBackground').classList.add('hidden');
-        document.getElementById('loadBackground').style.display = 'none';
-        document.getElementById('loadDiag').style.display = 'none';
-        document.getElementById('loadDiag_info').style.display = 'none';
-    }
-</script>
-
 
 <script>
     let weapon_PNG = {
