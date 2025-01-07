@@ -764,6 +764,7 @@
         let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content;
         entryArray.forEach(entry_index => {
             if (weaponCurrentAttribute[entry_index].lock === 0) {
+                filter_array(entry_index);
                 let randomEntry = generate_RandomEntry();
                 weaponCurrentAttribute[entry_index].attributeName = randomEntry.attributeName;
                 weaponCurrentAttribute[entry_index].attributeIndex = randomEntry.attributeIndex;
@@ -779,7 +780,7 @@
 
     // 随机生成一条附魔词条
     function generate_RandomEntry() {
-        let entry_index = getRandom_Index(entriesContent);
+        let entry_index = getRandom_Index(entriesContent, entry_exclude);
         let attribute_index = getRandom_Index(attributeRankContent);
         let entry_content = entriesContent.find(item => item.index === entry_index);
         let attribute_content = attributeRankContent.find(item => item.index === attribute_index);
@@ -801,10 +802,28 @@
             entryColor: attribute_content.color,
         };
     }
-
-    function getRandom_Index(list) {
-        let rarities = list.map(item => item.rarity);
-
+    // 排除当前武器已有附魔词条
+    let entry_exclude = [];
+    function filter_array(length) {
+        entry_exclude = [];
+        length = Number(length);
+        entryArray.forEach(entry_index => {
+            let index = Number(entry_index);
+            if (index < length) {
+                let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content;
+                let attributeIndex = weaponCurrentAttribute[entry_index].attributeIndex;
+                entry_exclude.push(attributeIndex);
+            } else { return; }
+        });
+    }
+    function getRandom_Index(list, array_exclude = []) {
+        // 过滤掉被排除的条目
+        let filteredList = list.filter(item => !array_exclude.includes(item.index));
+        if (filteredList.length === 0) {
+            return null;
+        }
+        // 计算累计权重
+        let rarities = filteredList.map(item => item.rarity);
         let cumulativeRarity = [];
         let cumulativeSum = 0;
         for (let rarity of rarities) {
@@ -813,10 +832,10 @@
         }
         let totalRarity = cumulativeRarity[cumulativeRarity.length - 1];
         let randomValue = Math.random() * totalRarity;
-
+        // 根据累计权重选择一个条目
         for (let i = 0; i < cumulativeRarity.length; i++) {
             if (randomValue < cumulativeRarity[i]) {
-                return i + 1;
+                return filteredList[i].index;
             }
         }
     }
