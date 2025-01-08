@@ -999,9 +999,11 @@
     }
 
     function init_diag_setting() {
+        // 锁定词条颜色
         let selectDiv = document.getElementById('select_rarity_alert');
         let select = document.createElement('select');
         select.id = 'select_rarity';
+        select.className = 'selector_rarity';
         attributeRankContent.forEach(item => {
             let option = document.createElement('option');
             option.value = item.index;
@@ -1601,16 +1603,16 @@
     }
 
 
-    #select_rarity_alert {
+    .p_setting_item {
         white-space: nowrap;
         display: flex;
-        justify-content: center;
+        /* justify-content: center; */
         align-items: center;
         text-align: center;
     }
 
-    #select_rarity_alert select {
-        width: 100%;
+    .selector_rarity {
+        width: 50%;
         padding: 10px;
         border-radius: 5px;
         border: 1px solid #ddd;
@@ -1622,13 +1624,17 @@
         transition: border 0.3s, box-shadow 0.3s;
     }
 
-    #select_rarity_alert select:focus {
+    .selector_rarity:focus {
         border: 1px solid #1890ff;
         box-shadow: 0 0 8px rgba(24, 144, 255, 0.4);
         outline: none;
     }
 
-    #select_rarity_alert option {
+    .selector_rarity option:checked {
+        background-color: #f9d3e3;
+    }
+
+    .selector_rarity option {
         padding: 10px;
         font-size: 18px;
         text-align: center;
@@ -1637,8 +1643,50 @@
         transition: background-color 0.3s;
     }
 
-    #select_rarity_alert option:hover {
+    .selector_rarity option:hover {
         background-color: #f0f0f0;
+    }
+
+    .selector_costom {
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        font-size: 16px;
+        text-align: center;
+        line-height: 30px;
+        border-radius: 50%;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+        color: #333;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        appearance: none;
+        transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    /* 悬停效果 */
+    .selector_costom:hover {
+        background-color: #f1f1f1;
+        border-color: #888;
+        transform: scale(1.1);
+    }
+
+    /* 获得焦点时 */
+    .selector_costom:focus {
+        outline: none;
+        border-color: #007bff;
+        background-color: #e6f0ff;
+        transform: scale(1.05);
+    }
+
+    /* 点击时的交互效果 */
+    .selector_costom:active {
+        background-color: #e0e0e0;
+        transform: scale(0.95);
+    }
+
+    /* 选项选中时的效果 */
+    .selector_costom option:checked {
+        background-color: #d0e0ff;
     }
 </style>
 
@@ -2002,7 +2050,44 @@
 
     </div>
 </div>
+<style>
+    /* 输入框样式 */
+    #developer_code_input {
+        width: 250px;
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        margin-right: 10px;
+        transition: all 0.3s ease;
+    }
 
+    #developer_code_input:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+        outline: none;
+    }
+
+    #developer_code_button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 1.5s ease, transform 0.3s ease;
+    }
+
+    #developer_code_button:active {
+        background-color: #004085;
+        transform: scale(0.95);
+    }
+
+    #developer_code_button:focus {
+        outline: none;
+    }
+</style>
 <!-- 设置 -->
 <div id="customDialog_setting" class="custom-dialog">
     <div class="custom-dialog-content" style="color: whitesmoke;background: linear-gradient(135deg,#c2ffd8,#465efb);">
@@ -2011,18 +2096,127 @@
             设置：
         </h2><br>
         <div id="p_setting_container" class="p_container" style="background: linear-gradient(135deg, #1488cc, #2b32b2)">
-            <br>
-            <p id="p_setting">
-            <div id="select_rarity_alert">
-                <span>选择提示锁定的稀有度：&nbsp;&nbsp;</span><br><br>
+            <div id="p_setting_content"><br>
+                <div id="select_rarity_alert" class="p_setting_item">
+                    <span>1. 选择提示锁定的稀有度：&nbsp;&nbsp;</span>
+                </div><br>
+                <div id="developer_code_div" class="p_setting_item">
+                    <span>2. 开发者代码：&nbsp;&nbsp;</span>
+                    <input type="text" id="developer_code_input">
+                    <button id="developer_code_button" onclick="developer_code_button_click()">确认</button>
+                </div><br>
+                <div id="developer_mode" class="p_setting_item" style="display: none;">
+                    <span>方案: <span id="span_scheme"></span>&nbsp;&nbsp;</span>
+                    <span>武器: <span id="span_weapon"></span>&nbsp;&nbsp;</span>
+                    <span>词条: <span id="span_entry"></span>&nbsp;&nbsp;</span>
+                    <span>属性: <span id="span_attribute"></span>&nbsp;&nbsp;</span>
+                    <span>评级: <span id="span_rank"></span>&nbsp;&nbsp;</span>
+                    </span>
+                </div><br>
             </div>
-            </p><br><br>
-            <button id="confirmButton_setting" class="confirmButton">确认</button>
-            <button id="cancelButton_setting" class="cancelButton">取消</button>
+            <div id="p_setting_buttons">
+                <button id="confirmButton_setting" class="confirmButton">确认</button>
+                <button id="cancelButton_setting" class="cancelButton">取消</button>
+            </div>
         </div>
 
     </div>
 </div>
+
+<script>
+    // 开发者模式
+    const developer_code_input_element = document.getElementById("developer_code_input");
+    const developer_code_button_element = document.getElementById("developer_code_button");
+    const developer_mode_element = document.getElementById("developer_mode");
+    const developer_password = "Ignorant";
+    let developer_mode = false;
+    function developer_code_button_click() {
+        if (developer_code_input_element.value === developer_password) {
+            developer_mode = !developer_mode;
+            if (developer_mode) {
+                developer_code_button_element.textContent = "关闭";
+                developer_mode_element.style.display = "block";
+            } else {
+                developer_code_button_element.textContent = "确认";
+                developer_mode_element.style.display = "none";
+            }
+        } else {
+            if (developer_mode) {
+                developer_code_button_element.textContent = "确认";
+                developer_mode_element.style.display = "none";
+            }
+        }
+
+    }
+    // 选择框容器
+    const span_scheme_element = document.getElementById("span_scheme");
+    const span_weapon_element = document.getElementById("span_weapon");
+    const span_entry_element = document.getElementById("span_entry");
+    const span_attribute_element = document.getElementById("span_attribute");
+    const span_rank_element = document.getElementById("span_rank");
+    // 选择框
+    const selector_scheme = document.createElement("select");
+    const selector_weapon = document.createElement("select");
+    const selector_entry = document.createElement("select");
+    const selector_attribute = document.createElement("select");
+    const selector_rank = document.createElement("select");
+    // 选择框 id
+    selector_scheme.id = "selector_scheme";
+    selector_weapon.id = "selector_weapon";
+    selector_entry.id = "selector_entry";
+    selector_attribute.id = "selector_attribute";
+    selector_rank.id = "selector_rank";
+    // 选择框 className
+    selector_scheme.className = "selector_costom";
+    selector_weapon.className = "selector_costom";
+    selector_entry.className = "selector_costom";
+    selector_attribute.className = "selector_costom";
+    selector_rank.className = "selector_costom";
+    // 选择框的默认元素
+    selector_scheme.appendChild(Object.assign(document.createElement("option"), { value: 0, textContent: "全" }));
+    selector_weapon.appendChild(Object.assign(document.createElement("option"), { value: 0, textContent: "全" }));
+    selector_entry.appendChild(Object.assign(document.createElement("option"), { value: 0, textContent: "全" }));
+    selector_attribute.appendChild(Object.assign(document.createElement("option"), { value: 0, textContent: "🎲" }));
+    selector_rank.appendChild(Object.assign(document.createElement("option"), { value: 0, textContent: "🎲" }));
+    // 选择框的选项
+    schemeArray.forEach((item) => {
+        let option = document.createElement("option");
+        option.value = item;
+        option.text = item;
+        selector_scheme.appendChild(option);
+    })
+    weaponArray.forEach((item) => {
+        let option = document.createElement("option");
+        option.value = item;
+        option.text = item;
+        selector_weapon.appendChild(option);
+    })
+    entryArray.forEach((item) => {
+        let option = document.createElement("option");
+        option.value = item;
+        option.text = item;
+        selector_entry.appendChild(option);
+    })
+    entriesContent.forEach((item) => {
+        let option = document.createElement("option");
+        option.value = item.index;
+        option.text += item.type === 'percent' ? `${item.name}%` : item.name;
+        selector_attribute.appendChild(option);
+    })
+    attributeRankContent.forEach((item) => {
+        let option = document.createElement("option");
+        option.value = item.index;
+        option.text = item.icon;
+        selector_rank.appendChild(option);
+    })
+    // 加入选择框
+    span_scheme_element.appendChild(selector_scheme);
+    span_weapon_element.appendChild(selector_weapon);
+    span_entry_element.appendChild(selector_entry);
+    span_attribute_element.appendChild(selector_attribute);
+    span_rank_element.appendChild(selector_rank);
+
+</script>
 
 <!-- 附魔信息 -->
 <div id="customDialog_info" class="custom-dialog">
