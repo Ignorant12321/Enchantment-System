@@ -286,7 +286,6 @@
         // 选择当前附魔方案
         enchantmentScheme_Current = schemeNumber;
         // 默认选择第一件武器
-        let weapons = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon;
         currentWeapon = weaponArray[0];
         // 取消上回的选中效果
         clear_weaponUI_scale();
@@ -299,9 +298,7 @@
         disable_refreshButton();
         update_consumeResources();
         // 更新附魔状态
-        for (let weaponKey in weapons) {
-            update_status(selectedWeapon = weaponKey, animation = false);
-        }
+        update_allStatus();
     }
 
     // 切换当前选择的武器
@@ -611,6 +608,13 @@
             weaponStatus.classList.remove('dark');
         }, 300);
     }
+    // 更新所有状态信息
+    function update_allStatus() {
+        let weapons = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon;
+        for (let weaponKey in weapons) {
+            update_status(selectedWeapon = weaponKey, animation = false);
+        }
+    }
 
     // 更新UI
     function updateUI() {
@@ -776,7 +780,7 @@
             }
         });
         totalPower_last = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).totalPower;
-        enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).totalPower = calTotalPower();
+        enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).totalPower = calSchemePower();
     }
 
     // 随机生成一条附魔词条
@@ -850,22 +854,24 @@
         }
     }
 
-    function calTotalPower() {
-        let totalPower = 0;
-        weaponArray.forEach(weapon => {
-            totalPower += calWeanontPower(weapon);
+    function calSchemePower(scheme_selected = enchantmentScheme_Current) {
+        let totalPower_scheme = 0;
+        let scheme_content = enchantmentsData.find(item1 => item1.enchantmentIndex == scheme_selected);
+        weaponArray.forEach(key => {
+            let weapon = scheme_content.weapon[key];
+            totalPower_scheme += calWeanonPower(weapon);
         });
-        return totalPower.toFixed(2);
+        return totalPower_scheme.toFixed(2);
     }
-    function calWeanontPower(weaponKey) {
-        let totalPower = 0;
-        let weapon_content = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon[weaponKey].content;
-        for (let key in weapon_content) {
-            totalPower += Number(weapon_content[key].entryPower);
-        }
-        let weapon_extra = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon[weaponKey].extra;
-        totalPower += Number(weapon_extra.power);
-        return totalPower;
+    function calWeanonPower(weapon) {
+        let totalPower_weapon = 0;
+        let weapon_content = weapon.content;
+        Object.values(weapon_content).forEach(item => {
+            totalPower_weapon += Number(item.entryPower);
+        });
+        let weapon_extra = weapon.extra;
+        totalPower_weapon += Number(weapon_extra.power);
+        return totalPower_weapon;
     }
     // 统计词条信息
     function aggregate_Attributes() {
@@ -1897,46 +1903,35 @@
     }
 
     .p_container {
-        height: 250px;
-        width: 500px;
-        overflow: auto;
         font-weight: bold;
         background: linear-gradient(135deg, #ffeeee, #ddefbb);
         padding: 15px 30px;
         border-radius: 12px;
         text-align: center;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        /* 增加阴影效果 */
     }
 
     /* 自定义滚动条样式 */
     .p_container::-webkit-scrollbar {
         width: 12px;
-        /* 滚动条的宽度 */
         height: 12px;
-        /* 横向滚动条的高度 */
     }
 
     /* 滚动条的滑块（抓手） */
     .p_container::-webkit-scrollbar-thumb {
         background-color: rgba(0, 0, 0, 0.2);
-        /* 滚动条滑块颜色 */
         border-radius: 6px;
-        /* 滑块的圆角 */
         transition: background-color 0.3s ease;
-        /* 动画效果 */
     }
 
     /* 滚动条滑块在悬停时的效果 */
     .p_container::-webkit-scrollbar-thumb:hover {
         background-color: rgba(0, 0, 0, 0.4);
-        /* 滑块悬停时的颜色 */
     }
 
     /* 滚动条轨道 */
     .p_container::-webkit-scrollbar-track {
         background-color: rgba(0, 0, 0, 0.1);
-        /* 滚动条轨道的颜色 */
         border-radius: 6px;
     }
 
@@ -2071,7 +2066,7 @@
                 <div id="select_rarity_alert" class="p_setting_item">
                     <span>1. 选择提示锁定的稀有度：&nbsp;&nbsp;</span>
                 </div><br>
-                <div id="developer_code_div" class= "p_setting_item">
+                <div id="developer_code_div" class="p_setting_item">
                     <span>2. 开发者模式：&nbsp;&nbsp;</span>
                     <input type="text" id="developer_code_input" placeholder="Enter the developer code!">
                     <button id="developer_code_button" onclick="developer_code_button_click()">开启</button>
@@ -2242,13 +2237,21 @@
                     }
                 })
             })
-            enchantmentsData.find(item1 => item1.enchantmentIndex == scheme_selected).totalPower = calTotalPower();
+            enchantmentsData.find(item1 => item1.enchantmentIndex == scheme_selected).totalPower = calSchemePower(scheme_selected);
         });
-        updateUI();
+        update_allStatus();
+        update_totalPower();
+        update_attributeList();
     }
 </script>
 
 <style>
+    #p_setting_container {
+        height: 250px;
+        width: 500px;
+        overflow: auto;
+    }
+
     .p_setting_item {
         white-space: nowrap;
         display: flex;
