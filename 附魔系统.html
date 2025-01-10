@@ -159,7 +159,7 @@
                     };
                 });
                 weapon["extra"] = {};
-                weapon.extra["index"] = `${weaponContent.find(item1 => item1.index === weaponType).attributeIndex}`;
+                weapon.extra["index"] = `${weaponContent.find(item1 => item1.index == weaponType).attributeIndex}`;
                 weapon.extra["value"] = 0;
                 weapon.extra["power"] = 0;
                 scheme.weapon[weaponType] = weapon;
@@ -186,9 +186,9 @@
         hide_loadDiag();
     });
     document.onreadystatechange = function () {
-        if (document.readyState === 'loading') {
+        if (document.readyState == 'loading') {
             show_loadDiag();
-        } else if (document.readyState === 'interactive') {
+        } else if (document.readyState == 'interactive') {
             show_loadDiag();
         }
     };
@@ -286,7 +286,7 @@
         // 选择当前附魔方案
         enchantmentScheme_Current = schemeNumber;
         // 默认选择第一件武器
-        let weapons = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon;
+        let weapons = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon;
         currentWeapon = weaponArray[0];
         // 取消上回的选中效果
         clear_weaponUI_scale();
@@ -315,7 +315,7 @@
         disable_refreshButton();
         update_consumeResources();
         // 选择当前武器的UI
-        if (event.button === 2) {
+        if (event.button == 2) {
             // 移动放大效果
             let weaponItem = document.getElementById('weapon-item-' + currentWeapon);
             if (weaponItem.classList.contains('active')) {
@@ -336,14 +336,14 @@
     }
     // 刷新当前武器的附加值
     function update_weaponValue() {
-        let shouldSetNeverFlag = Object.values(enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content).every(item1 => item1.attributeIndex === -1);
+        let shouldSetNeverFlag = Object.values(enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon[currentWeapon].content).every(item1 => item1.attributeIndex == -1);
         if (shouldSetNeverFlag) {
             // 武器未刷新过
             weaponValue_element.textContent = '【武器特性：？？？】';
         } else {
-            let weapon_item = weaponContent.find(item1 => item1.index === currentWeapon);
-            let content_name = entriesContent.find(item1 => item1.index === weapon_item.attributeIndex).name;
-            let currentWeapon_value = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].extra.value;
+            let weapon_item = weaponContent.find(item1 => item1.index == currentWeapon);
+            let content_name = entriesContent.find(item1 => item1.index == weapon_item.attributeIndex).name;
+            let currentWeapon_value = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon[currentWeapon].extra.value;
             let content = `【武器特性：+ ${currentWeapon_value} ${content_name}】`;
             // enchantment_info_element.textContent = weapon.name;
             weaponValue_element.textContent = content;
@@ -484,7 +484,7 @@
 
     function init_attributeList() {
         attribute_list_element.innerHTML = '';
-        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content;
+        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon[currentWeapon].content;
         entryArray.forEach(entry_index => {
             // 初始化附魔词条颜色
             weaponArray.forEach(weapon => {
@@ -508,7 +508,7 @@
             let attributeName = entry.attributeName || "？？？？？"; // 如果没有属性名，则默认显示 "？？？"
             let attributeValue = entry.entryValue || -1; // 如果没有属性值，则默认值为 -1
             let attributeColor = entry.entryColor || '#262626'; // 如果没有设置颜色，则默认设置为 'black'
-            let lockedStatus = entry.lock === 1 ? true : false; // 判断属性是否锁定
+            let lockedStatus = entry.lock == 1 ? true : false; // 判断属性是否锁定
 
             // 设置 entryDiv 的内容
             entryDiv.id = `entry_${entry_index}`;
@@ -524,7 +524,7 @@
 
     // 更新页面内容
     function update_attributeList() {
-        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content;
+        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon[currentWeapon].content;
         entryArray.forEach(entry_index => {
             let statusSpan = document.getElementById(`lockStatus_${entry_index}`);
             let attributeSpan = document.getElementById(`attribute_${entry_index}`);
@@ -534,13 +534,13 @@
             let attributeValue = entry.entryValue || -1; // 如果没有属性值，则默认值为 -1
             let attributePercent = entry.entryPercent || 0; // 如果没有属性值，则默认值为 0
             let attributeColor = entry.entryColor || '#262626'; // 如果没有设置颜色，则默认设置为 'black'
-            let lockedStatus = entry.lock === 1 ? true : false; // 判断属性是否锁定
+            let lockedStatus = entry.lock == 1 ? true : false; // 判断属性是否锁定
 
             // 设置 entry 的内容
             statusSpan.textContent = lockedStatus ? '🔒' : '🔓';
             statusSpan.style.backgroundColor = lockedStatus ? 'red' : 'green';
             attributeSpan.style = `color:${attributeColor}`;
-            if (attributeValue === -1) {
+            if (attributeValue == -1) {
                 attributeSpan.textContent = "？？？？？";
             } else {
                 attributeSpan.textContent = `${attributeName}: ${attributeValue}【${attributePercent}%】`;
@@ -552,7 +552,7 @@
     let totalPower_last = 0;
     function update_totalPower(animation = true) {
         // 更新数值
-        let totalPower_current = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).totalPower;
+        let totalPower_current = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).totalPower;
         totalPower_element.textContent = totalPower_current;
         if (animation) {
             // 创建浮动的数字
@@ -592,13 +592,13 @@
             weaponStatus.classList.add('blink');
             weaponStatus.classList.add('dark');
         }
-        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[selectedWeapon].content;
+        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon[selectedWeapon].content;
         entryArray.forEach(entry_index => {
             let weaponEntryColorStatus = document.getElementById(`weapon${selectedWeapon}-power-${entry_index}`);
             // 获取属性数据
             let entry = weaponCurrentAttribute[entry_index];
             let attributeColor = entry.entryColor || '#262626'; // 如果没有设置颜色，则默认设置为 'black'
-            let attributeStatueIcon = attributeRankContent.find(item1 => item1.color === attributeColor).icon;
+            let attributeStatueIcon = attributeRankContent.find(item1 => item1.color == attributeColor).icon;
             // 设置 entry 的内容
             weaponEntryColorStatus.innerHTML = attributeStatueIcon;
         });
@@ -641,7 +641,7 @@
     function disable_refreshButton() {
         let lockCount = get_lockCounter();
         let lockTotal = entryArray.length;
-        if (lockCount === lockTotal) {
+        if (lockCount == lockTotal) {
             refreshButton_element.disabled = true;
             refreshCost_element.classList.add('disabled');
         }
@@ -674,13 +674,13 @@
     }
     // 增加资源数量
     function increaseResource(Type, amount) {
-        if (Type === 'money') {
+        if (Type == 'money') {
             money += amount;
             update_money();
-        } else if (Type === 'whiteStone') {
+        } else if (Type == 'whiteStone') {
             whiteStone += amount;
             update_whiteStone();
-        } else if (Type === 'colorGem') {
+        } else if (Type == 'colorGem') {
             colorGem += amount;
             update_colorGem();
         }
@@ -698,7 +698,7 @@
         return 100;
     }
     function get_lockCounter() {
-        let current_EntryArray = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content;
+        let current_EntryArray = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon[currentWeapon].content;
         return Object.values(current_EntryArray).reduce((sum, entry) => sum + entry.lock, 0);
     }
     function get_colorGemCost() {
@@ -708,11 +708,11 @@
     let rarity_alert = 2;
     // 检查是否含有珍贵属性并继续执行
     function checkRarity() {
-        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content;
+        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon[currentWeapon].content;
         let rarityCount = 0;
         entryArray.forEach(entry_index => {
-            if (weaponCurrentAttribute[entry_index].lock === 0) {
-                let rarityRank = attributeRankContent.find(item1 => item1.color === weaponCurrentAttribute[entry_index].entryColor).index;
+            if (weaponCurrentAttribute[entry_index].lock == 0) {
+                let rarityRank = attributeRankContent.find(item1 => item1.color == weaponCurrentAttribute[entry_index].entryColor).index;
                 if (rarityRank <= rarity_alert) {
                     rarityCount++;
                 }
@@ -748,9 +748,9 @@
             return;
         }
         // 找到当前武器
-        let currentWeapon_info = weaponContent.find(item1 => item1.index === currentWeapon);
-        let power = entriesContent.find(item1 => item1.index === currentWeapon_info.attributeIndex).power;
-        let currentWeapon_extra = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].extra;
+        let currentWeapon_info = weaponContent.find(item1 => item1.index == currentWeapon);
+        let power = entriesContent.find(item1 => item1.index == currentWeapon_info.attributeIndex).power;
+        let currentWeapon_extra = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon[currentWeapon].extra;
         // 如果随机数小于升级概率，则进行升级
         let randomChance = Math.random();
         if (randomChance < update_probability) {
@@ -761,42 +761,48 @@
     }
     // 随机生成多条附魔词条
     function generate_Enchantments() {
-        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content;
+        let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon[currentWeapon].content;
         entryArray.forEach(entry_index => {
-            if (weaponCurrentAttribute[entry_index].lock === 0) {
+            if (weaponCurrentAttribute[entry_index].lock == 0) {
                 filter_array(entry_index);
                 let randomEntry = generate_RandomEntry();
-                weaponCurrentAttribute[entry_index].attributeName = randomEntry.attributeName;
-                weaponCurrentAttribute[entry_index].attributeIndex = randomEntry.attributeIndex;
-                weaponCurrentAttribute[entry_index].entryValue = randomEntry.entryValue;
-                weaponCurrentAttribute[entry_index].entryPercent = randomEntry.entryPercent;
-                weaponCurrentAttribute[entry_index].entryColor = randomEntry.entryColor;
-                weaponCurrentAttribute[entry_index].entryPower = randomEntry.entryPower;
+                let entryCurrent = weaponCurrentAttribute[entry_index];
+                entryCurrent.attributeName = randomEntry.attributeName;
+                entryCurrent.attributeIndex = randomEntry.attributeIndex;
+                entryCurrent.entryValue = randomEntry.entryValue;
+                entryCurrent.entryPercent = randomEntry.entryPercent;
+                entryCurrent.entryColor = randomEntry.entryColor;
+                entryCurrent.entryPower = randomEntry.entryPower;
             }
         });
-        totalPower_last = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).totalPower;
-        enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).totalPower = calTotalPower();
+        totalPower_last = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).totalPower;
+        enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).totalPower = calTotalPower();
     }
 
     // 随机生成一条附魔词条
-    function generate_RandomEntry() {
-        let entry_index = getRandom_Index(entriesContent, entry_exclude);
-        let attribute_index = getRandom_Index(attributeRankContent);
-        let entry_content = entriesContent.find(item => item.index === entry_index);
-        let attribute_content = attributeRankContent.find(item => item.index === attribute_index);
-        let rank_Count = attributeRankContent.length;
-
+    function generate_RandomEntry(entry_index = null, attribute_index = null) {
+        // 随机生成词条属性
+        if (entry_index == null) {
+            entry_index = getRandom_Index(entriesContent, entry_exclude);
+        }
+        // 随机生成词条评级
+        if (attribute_index == null) {
+            attribute_index = getRandom_Index(attributeRankContent);
+        }
+        // 词条内容
+        let entry_content = entriesContent.find(item => item.index == entry_index);
+        let attribute_content = attributeRankContent.find(item => item.index == attribute_index);
+        // 词条数值
         let base_Value = attribute_content.base / 100;
         let range_Value = Math.random() * attribute_content.range / 100;
         let attribute_Value = entry_content.max * (base_Value + range_Value);
-
         let attribute_Percent = attribute_Value / entry_content.max * 100;
         let attribute_Power = entry_content.power * attribute_Value;
         let attribute_Type = entry_content.type;
         return {
             attributeName: entry_content.name,
             attributeIndex: entry_index,
-            entryValue: (attribute_Type === "decimal" ? attribute_Value.toFixed(2) : attribute_Type === "percent" ? attribute_Value.toFixed(2) + "%" : attribute_Value.toFixed(2)),
+            entryValue: (attribute_Type == "decimal" ? attribute_Value.toFixed(2) : attribute_Type == "percent" ? attribute_Value.toFixed(2) + "%" : attribute_Value.toFixed(2)),
             entryPercent: attribute_Percent.toFixed(2),
             entryPower: attribute_Power.toFixed(2),
             entryColor: attribute_content.color,
@@ -804,22 +810,26 @@
     }
     // 排除当前武器已有附魔词条
     let entry_exclude = [];
-    function filter_array(length) {
+    function filter_array(length, weapon_selected = currentWeapon, scheme_selected = enchantmentScheme_Current) {
         entry_exclude = [];
         length = Number(length);
-        entryArray.forEach(entry_index => {
-            let index = Number(entry_index);
+        for (let i = 0; i < entryArray.length; i++) {
+            let index = entryArray[i];
+            let schemeCurrent = enchantmentsData.find(item1 => item1.enchantmentIndex == scheme_selected);
+            let weaponCurrent = schemeCurrent.weapon[weapon_selected].content;
             if (index < length) {
-                let weaponCurrentAttribute = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content;
-                let attributeIndex = weaponCurrentAttribute[entry_index].attributeIndex;
+                let attributeIndex = weaponCurrent[index].attributeIndex;
                 entry_exclude.push(attributeIndex);
-            } else { return; }
-        });
+            } else {
+                break;
+            }
+        };
+
     }
     function getRandom_Index(list, array_exclude = []) {
         // 过滤掉被排除的条目
         let filteredList = list.filter(item => !array_exclude.includes(item.index));
-        if (filteredList.length === 0) {
+        if (filteredList.length == 0) {
             return null;
         }
         // 计算累计权重
@@ -849,29 +859,29 @@
     }
     function calWeanontPower(weaponKey) {
         let totalPower = 0;
-        let weapon_content = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[weaponKey].content;
+        let weapon_content = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon[weaponKey].content;
         for (let key in weapon_content) {
             totalPower += Number(weapon_content[key].entryPower);
         }
-        let weapon_extra = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[weaponKey].extra;
+        let weapon_extra = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon[weaponKey].extra;
         totalPower += Number(weapon_extra.power);
         return totalPower;
     }
     // 统计词条信息
     function aggregate_Attributes() {
         let aggregatedAttributes_list = {};  // 用来存储统计结果的对象
-        let data = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon;
+        let data = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon;
         // 使用 Object.values() 将 data 转换为数组进行遍历
         Object.values(data).forEach(weaponKey => {
             // 武器的词条属性
             let weapon_content = weaponKey.content;
             entryArray.forEach(entry => {
                 let attributeIndex = weapon_content[entry].attributeIndex;
-                if (attributeIndex === -1) {
+                if (attributeIndex == -1) {
                     return;     // 排除 未刷新过的属性“？？？？？”
                 }
                 let entryValue = weapon_content[entry].entryValue;
-                let entryType = entriesContent.find(item1 => item1.index === attributeIndex).type;
+                let entryType = entriesContent.find(item1 => item1.index == attributeIndex).type;
 
                 // 如果属性名已经存在，则累加
                 if (aggregatedAttributes_list[attributeIndex]) {
@@ -927,7 +937,7 @@
     function toggleLock(iconElement) {
         let entryId = iconElement.closest('.attribute').id;
         let entry_index = parseInt(entryId.split('_')[1]);
-        let lock = enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content[entry_index].lock;
+        let lock = enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon[currentWeapon].content[entry_index].lock;
         let statusElement = iconElement.parentElement.querySelector('span');
         if (lock == 1) {
             statusElement.textContent = '🔓';
@@ -938,7 +948,7 @@
             statusElement.style.backgroundColor = 'red';
             lock = 1;
         }
-        enchantmentsData.find(item1 => item1.enchantmentIndex === enchantmentScheme_Current).weapon[currentWeapon].content[entry_index].lock = lock;
+        enchantmentsData.find(item1 => item1.enchantmentIndex == enchantmentScheme_Current).weapon[currentWeapon].content[entry_index].lock = lock;
         update_consumeResources();
         disable_refreshButton();
     }
@@ -1003,7 +1013,7 @@
         let selectDiv = document.getElementById('select_rarity_alert');
         let select = document.createElement('select');
         select.id = 'select_rarity';
-        select.className = 'selector_rarity';
+        select.className = 'selector_rectangle';
         attributeRankContent.forEach(item => {
             let option = document.createElement('option');
             option.value = item.index;
@@ -1601,93 +1611,6 @@
             background-color: #f0f0f0;
         }  */
     }
-
-
-    .p_setting_item {
-        white-space: nowrap;
-        display: flex;
-        /* justify-content: center; */
-        align-items: center;
-        text-align: center;
-    }
-
-    .selector_rarity {
-        width: 50%;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #ddd;
-        font-size: 16px;
-        background-color: #fff;
-        color: #333;
-        cursor: pointer;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        transition: border 0.3s, box-shadow 0.3s;
-    }
-
-    .selector_rarity:focus {
-        border: 1px solid #1890ff;
-        box-shadow: 0 0 8px rgba(24, 144, 255, 0.4);
-        outline: none;
-    }
-
-    .selector_rarity option:checked {
-        background-color: #f9d3e3;
-    }
-
-    .selector_rarity option {
-        padding: 10px;
-        font-size: 18px;
-        text-align: center;
-        background-color: #fff;
-        color: #333;
-        transition: background-color 0.3s;
-    }
-
-    .selector_rarity option:hover {
-        background-color: #f0f0f0;
-    }
-
-    .selector_costom {
-        width: 30px;
-        height: 30px;
-        padding: 0;
-        font-size: 16px;
-        text-align: center;
-        line-height: 30px;
-        border-radius: 50%;
-        border: 1px solid #ccc;
-        background-color: #f9f9f9;
-        color: #333;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        appearance: none;
-        transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    /* 悬停效果 */
-    .selector_costom:hover {
-        background-color: #f1f1f1;
-        border-color: #888;
-        transform: scale(1.1);
-    }
-
-    /* 获得焦点时 */
-    .selector_costom:focus {
-        outline: none;
-        border-color: #007bff;
-        background-color: #e6f0ff;
-        transform: scale(1.05);
-    }
-
-    /* 点击时的交互效果 */
-    .selector_costom:active {
-        background-color: #e0e0e0;
-        transform: scale(0.95);
-    }
-
-    /* 选项选中时的效果 */
-    .selector_costom option:checked {
-        background-color: #d0e0ff;
-    }
 </style>
 
 <style>
@@ -1974,12 +1897,58 @@
     }
 
     .p_container {
+        height: 250px;
+        width: 500px;
+        overflow: auto;
         font-weight: bold;
         background: linear-gradient(135deg, #ffeeee, #ddefbb);
         padding: 15px 30px;
         border-radius: 12px;
         text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        /* 增加阴影效果 */
     }
+
+    /* 自定义滚动条样式 */
+    .p_container::-webkit-scrollbar {
+        width: 12px;
+        /* 滚动条的宽度 */
+        height: 12px;
+        /* 横向滚动条的高度 */
+    }
+
+    /* 滚动条的滑块（抓手） */
+    .p_container::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        /* 滚动条滑块颜色 */
+        border-radius: 6px;
+        /* 滑块的圆角 */
+        transition: background-color 0.3s ease;
+        /* 动画效果 */
+    }
+
+    /* 滚动条滑块在悬停时的效果 */
+    .p_container::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(0, 0, 0, 0.4);
+        /* 滑块悬停时的颜色 */
+    }
+
+    /* 滚动条轨道 */
+    .p_container::-webkit-scrollbar-track {
+        background-color: rgba(0, 0, 0, 0.1);
+        /* 滚动条轨道的颜色 */
+        border-radius: 6px;
+    }
+
+    /* 横向滚动条的样式 */
+    .p_container::-webkit-scrollbar-horizontal {
+        height: 12px;
+    }
+
+    .p_container::-webkit-scrollbar-thumb:horizontal {
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+
 
     /* 确认按钮 */
     .confirmButton {
@@ -2059,6 +2028,7 @@
         border: 2px solid #ccc;
         border-radius: 5px;
         margin-right: 10px;
+        text-align: center;
         transition: all 0.3s ease;
     }
 
@@ -2088,6 +2058,7 @@
         outline: none;
     }
 </style>
+
 <!-- 设置 -->
 <div id="customDialog_setting" class="custom-dialog">
     <div class="custom-dialog-content" style="color: whitesmoke;background: linear-gradient(135deg,#c2ffd8,#465efb);">
@@ -2101,18 +2072,19 @@
                     <span>1. 选择提示锁定的稀有度：&nbsp;&nbsp;</span>
                 </div><br>
                 <div id="developer_code_div" class="p_setting_item">
-                    <span>2. 开发者代码：&nbsp;&nbsp;</span>
-                    <input type="text" id="developer_code_input">
-                    <button id="developer_code_button" onclick="developer_code_button_click()">确认</button>
+                    <span>2. 开发者模式：&nbsp;&nbsp;</span>
+                    <input type="text" id="developer_code_input" placeholder="Enter the developer code!">
+                    <button id="developer_code_button" onclick="developer_code_button_click()">开启</button>
                 </div><br>
                 <div id="developer_mode" class="p_setting_item" style="display: none;">
-                    <span>方案: <span id="span_scheme"></span>&nbsp;&nbsp;</span>
-                    <span>武器: <span id="span_weapon"></span>&nbsp;&nbsp;</span>
-                    <span>词条: <span id="span_entry"></span>&nbsp;&nbsp;</span>
-                    <span>属性: <span id="span_attribute"></span>&nbsp;&nbsp;</span>
-                    <span>评级: <span id="span_rank"></span>&nbsp;&nbsp;</span>
-                    </span>
-                </div><br>
+                    <span>方案:&nbsp;&nbsp;<span id="span_scheme"></span>&nbsp;&nbsp;&nbsp;</span>
+                    <span>武器:&nbsp;&nbsp;<span id="span_weapon"></span>&nbsp;&nbsp;&nbsp;</span>
+                    <span>词条:&nbsp;&nbsp;<span id="span_entry"></span>&nbsp;&nbsp;&nbsp;</span>
+                    <br><br>
+                    <span>属性:&nbsp;&nbsp;<span id="span_attribute"></span>&nbsp;&nbsp;&nbsp;</span>
+                    <span>评级:&nbsp;&nbsp;<span id="span_rank"></span>&nbsp;&nbsp;&nbsp;</span>
+                    <br><br>
+                </div>
             </div>
             <div id="p_setting_buttons">
                 <button id="confirmButton_setting" class="confirmButton">确认</button>
@@ -2128,26 +2100,28 @@
     const developer_code_input_element = document.getElementById("developer_code_input");
     const developer_code_button_element = document.getElementById("developer_code_button");
     const developer_mode_element = document.getElementById("developer_mode");
-    const developer_password = "Ignorant";
+    const developer_password = "1";
     let developer_mode = false;
     function developer_code_button_click() {
-        if (developer_code_input_element.value === developer_password) {
-            developer_mode = !developer_mode;
-            if (developer_mode) {
-                developer_code_button_element.textContent = "关闭";
-                developer_mode_element.style.display = "block";
-            } else {
-                developer_code_button_element.textContent = "确认";
-                developer_mode_element.style.display = "none";
-            }
+        if (developer_mode) {
+            refreshEntry_dev();
         } else {
-            if (developer_mode) {
-                developer_code_button_element.textContent = "确认";
-                developer_mode_element.style.display = "none";
-            }
+            developer_code_button_element.textContent = "开启";
+            developer_mode_element.style.display = "none";
         }
-
     }
+    developer_code_input_element.addEventListener("input", function (event) {
+        if (developer_code_input_element.value == developer_password) {
+            developer_mode = true;
+            developer_code_button_element.textContent = "定制";
+            developer_mode_element.style.display = "block";
+        }
+        else {
+            developer_mode = false;
+            developer_code_button_element.textContent = "开启";
+            developer_mode_element.style.display = "none";
+        }
+    });
     // 选择框容器
     const span_scheme_element = document.getElementById("span_scheme");
     const span_weapon_element = document.getElementById("span_weapon");
@@ -2167,16 +2141,18 @@
     selector_attribute.id = "selector_attribute";
     selector_rank.id = "selector_rank";
     // 选择框 className
-    selector_scheme.className = "selector_costom";
-    selector_weapon.className = "selector_costom";
-    selector_entry.className = "selector_costom";
-    selector_attribute.className = "selector_costom";
-    selector_rank.className = "selector_costom";
+    selector_scheme.className = "selector_circle";
+    selector_weapon.className = "selector_circle";
+    selector_entry.className = "selector_circle";
+    selector_attribute.className = "selector_rectangle";
+    selector_rank.className = "selector_circle";
+    // 选择框额外设置
+    selector_attribute.style.width = "40%";
     // 选择框的默认元素
     selector_scheme.appendChild(Object.assign(document.createElement("option"), { value: 0, textContent: "全" }));
     selector_weapon.appendChild(Object.assign(document.createElement("option"), { value: 0, textContent: "全" }));
     selector_entry.appendChild(Object.assign(document.createElement("option"), { value: 0, textContent: "全" }));
-    selector_attribute.appendChild(Object.assign(document.createElement("option"), { value: 0, textContent: "🎲" }));
+    selector_attribute.appendChild(Object.assign(document.createElement("option"), { value: 0, textContent: "随机🎲" }));
     selector_rank.appendChild(Object.assign(document.createElement("option"), { value: 0, textContent: "🎲" }));
     // 选择框的选项
     schemeArray.forEach((item) => {
@@ -2200,7 +2176,7 @@
     entriesContent.forEach((item) => {
         let option = document.createElement("option");
         option.value = item.index;
-        option.text += item.type === 'percent' ? `${item.name}%` : item.name;
+        option.text += item.type == 'percent' ? `${item.name}%` : item.name;
         selector_attribute.appendChild(option);
     })
     attributeRankContent.forEach((item) => {
@@ -2215,8 +2191,148 @@
     span_entry_element.appendChild(selector_entry);
     span_attribute_element.appendChild(selector_attribute);
     span_rank_element.appendChild(selector_rank);
-
+    // 开发者模式：刷新词条
+    function refreshEntry_dev() {
+        // 附魔方案
+        let selector_scheme_array = [];
+        if (selector_scheme.value == 0) {
+            selector_scheme_array = schemeArray;
+        }
+        else { selector_scheme_array.push(selector_scheme.value) }
+        selector_scheme_array.forEach(scheme_selected => {
+            // 武器
+            let selector_weapon_array = [];
+            if (selector_weapon.value == 0) {
+                selector_weapon_array = weaponArray;
+            }
+            else { selector_weapon_array.push(selector_weapon.value) }
+            selector_weapon_array.forEach(weapon_selected => {
+                // 词条
+                let selector_entry_array = [];
+                if (selector_entry.value == 0) {
+                    selector_entry_array = entryArray;
+                }
+                else { selector_entry_array.push(selector_entry.value) }
+                selector_entry_array.forEach(entry_selected => {
+                    // 属性
+                    let attribute_selected = 0;
+                    attribute_selected = selector_attribute.value;
+                    if (attribute_selected == 0) {
+                        filter_array(entry_selected, weapon_selected, scheme_selected);
+                        attribute_selected = getRandom_Index(entriesContent, entry_exclude);
+                    }
+                    // 评级
+                    let rank_selected = 0;
+                    rank_selected = selector_rank.value;
+                    if (rank_selected == 0) {
+                        rank_selected = getRandom_Index(attributeRankContent);
+                    }
+                    // 附魔
+                    let schemeCurrent = enchantmentsData.find(item1 => item1.enchantmentIndex == scheme_selected);
+                    let weaponCurrent = schemeCurrent.weapon[weapon_selected].content;
+                    if (weaponCurrent[entry_selected].lock == 0) {
+                        let randomEntry = generate_RandomEntry(entry_index = attribute_selected, attribute_index = rank_selected);
+                        let entryCurrent = weaponCurrent[entry_selected];
+                        entryCurrent.attributeName = randomEntry.attributeName;
+                        entryCurrent.attributeIndex = randomEntry.attributeIndex;
+                        entryCurrent.entryValue = randomEntry.entryValue;
+                        entryCurrent.entryPercent = randomEntry.entryPercent;
+                        entryCurrent.entryColor = randomEntry.entryColor;
+                        entryCurrent.entryPower = randomEntry.entryPower;
+                    }
+                })
+            })
+            enchantmentsData.find(item1 => item1.enchantmentIndex == scheme_selected).totalPower = calTotalPower();
+        });
+        updateUI();
+    }
 </script>
+
+<style>
+    .p_setting_item {
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        text-align: center;
+    }
+
+    /* 矩形选择框 */
+    .selector_rectangle {
+        width: 15%;
+        max-height: 100px;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        font-size: 16px;
+        background-color: #fff;
+        color: #333;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    .selector_rectangle:focus {
+        border: 1px solid #1890ff;
+        box-shadow: 0 0 8px rgba(24, 144, 255, 0.4);
+        outline: none;
+    }
+
+    .selector_rectangle option:checked {
+        background-color: #d0e0ff;
+    }
+
+    .selector_rectangle option {
+        padding: 10px;
+        font-size: 18px;
+        text-align: center;
+        background-color: #fff;
+        color: #333;
+        transition: background-color 0.3s;
+    }
+
+    .selector_rectangle option:hover {
+        background-color: #f0f0f0;
+    }
+
+    /* 圆形选择框 */
+    .selector_circle {
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        font-size: 16px;
+        text-align: center;
+        border-radius: 50%;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+        color: #333;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        appearance: none;
+        transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .selector_circle:hover {
+        background-color: #f1f1f1;
+        border-color: #888;
+        transform: scale(1.1);
+    }
+
+    .selector_circle:focus {
+        outline: none;
+        border-color: #007bff;
+        background-color: #e6f0ff;
+        transform: scale(1.05);
+    }
+
+    .selector_circle:active {
+        background-color: #e0e0e0;
+        transform: scale(0.95);
+    }
+
+    .selector_circle option:checked {
+        background-color: #d0e0ff;
+    }
+</style>
 
 <!-- 附魔信息 -->
 <div id="customDialog_info" class="custom-dialog">
