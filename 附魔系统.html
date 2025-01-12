@@ -2014,45 +2014,6 @@
 
     </div>
 </div>
-<style>
-    /* 输入框样式 */
-    #developer_code_input {
-        width: 250px;
-        padding: 10px;
-        font-size: 16px;
-        border: 2px solid #ccc;
-        border-radius: 5px;
-        margin-right: 10px;
-        text-align: center;
-        transition: all 0.3s ease;
-    }
-
-    #developer_code_input:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-        outline: none;
-    }
-
-    #developer_code_button {
-        padding: 10px 20px;
-        font-size: 16px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 1.5s ease, transform 0.3s ease;
-    }
-
-    #developer_code_button:active {
-        background-color: #004085;
-        transform: scale(0.95);
-    }
-
-    #developer_code_button:focus {
-        outline: none;
-    }
-</style>
 
 <!-- 设置 -->
 <div id="customDialog_setting" class="custom-dialog">
@@ -2110,11 +2071,12 @@
             developer_mode = true;
             developer_code_button_element.textContent = "定制";
             developer_mode_element.style.display = "block";
-        }
-        else {
+            developer_code_button_element.classList.add("glowing");
+        } else {
             developer_mode = false;
             developer_code_button_element.textContent = "开启";
             developer_mode_element.style.display = "none";
+            developer_code_button_element.classList.remove("glowing");
         }
     });
     // 选择框容器
@@ -2244,8 +2206,72 @@
         update_attributeList();
     }
 </script>
-
 <style>
+    /* 输入框样式 */
+    #developer_code_input {
+        width: 250px;
+        padding: 10px;
+        font-size: 16px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        margin-right: 10px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    #developer_code_input:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+        outline: none;
+    }
+
+    /* 定制词条按钮样式 */
+    #developer_code_button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        display: inline-block;
+    }
+
+    /* 按钮按下时的效果 */
+    #developer_code_button:active {
+        background-color: #004085;
+        transform: scale(0.95);
+    }
+
+    /* 按钮聚焦时去除轮廓 */
+    #developer_code_button:focus {
+        outline: none;
+    }
+
+    /* 流光效果的背景动画 */
+    @keyframes glowing {
+        0% {
+            background-position: 100%;
+        }
+
+        100% {
+            background-position: -100%;
+        }
+    }
+
+    /* 流光效果的样式，默认不显示 */
+    #developer_code_button.glowing {
+        background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+        background-size: 400% 100%;
+        animation: glowing 2s linear infinite;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+
+
     #p_setting_container {
         height: 250px;
         width: 500px;
